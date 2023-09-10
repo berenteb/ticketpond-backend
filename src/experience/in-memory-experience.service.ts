@@ -51,7 +51,7 @@ export class InMemoryExperienceService implements ExperienceServiceInterface {
   }
 
   updateExperience(id: string, experience: WithoutId<ExperienceEntity>): Promise<ExperienceEntity> {
-    const index = this.experiences.findIndex((experience) => experience.id === id);
+    const index = this.experiences.findIndex((e) => e.id === id);
     const updatedExperience: ExperienceEntity = {
       ...experience,
       id,
