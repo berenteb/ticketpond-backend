@@ -1,4 +1,5 @@
 import { Identifiable } from '../common.types';
+import { TicketEntity } from './ticket.entity';
 
 export type ExperienceEntity = {
   name: string;
@@ -8,3 +9,7 @@ export type ExperienceEntity = {
   location: string;
   bannerImage: string;
 } & Identifiable;
+
+export type ExperienceView = ExperienceEntity & {
+  tickets: TicketEntity;
+};
