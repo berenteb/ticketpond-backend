@@ -1,5 +1,7 @@
+import { OrderView } from '../entities/order.entity';
+
 export abstract class PaymentServiceInterface {
-  abstract payForOrder(orderId: string): Promise<void>;
+  abstract payForOrder(order: OrderView): Promise<void>;
   abstract paymentSucceed(): Promise<void>;
   abstract paymentFail(): Promise<void>;
 }
