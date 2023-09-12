@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { WithoutId } from '../types/common.types';
-import { OrderView } from '../types/entities/order.entity';
+import { CartView } from '../types/entities/cart.entity';
+import { OrderStatus, OrderView, PaymentStatus } from '../types/entities/order.entity';
 import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
+import { generateSerialNumber } from '../util/serialNumber.util';
 
 @Injectable()
 export class OrderService implements OrderServiceInterface {
@@ -22,11 +24,8 @@ export class OrderService implements OrderServiceInterface {
     return Promise.resolve(orders);
   }
 
-  createOrder(order: WithoutId<OrderView>): Promise<OrderView> {
-    const newOrder = {
-      ...order,
-      id: String(this.idCounter++),
-    };
+  createOrder(cart: WithoutId<CartView>): Promise<OrderView> {
+    const newOrder = mapCartToOrder(cart, String(this.idCounter++));
     this.orders.push(newOrder);
     return Promise.resolve(newOrder);
   }
@@ -35,4 +34,15 @@ export class OrderService implements OrderServiceInterface {
     this.orders = this.orders.filter((order) => order.id !== id);
     return Promise.resolve(undefined);
   }
+}
+
+function mapCartToOrder(cart: WithoutId<CartView>, id: string): OrderView {
+  return {
+    id,
+    userId: cart.userId,
+    createdAt: new Date(),
+    paymentStatus: PaymentStatus.PENDING,
+    orderStatus: OrderStatus.PENDING,
+    items: cart.items.map((item) => ({ orderId: id, ticketId: item.ticketId, serialNumber: generateSerialNumber() })),
+  };
 }

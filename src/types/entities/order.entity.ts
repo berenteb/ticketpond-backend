@@ -1,14 +1,7 @@
 import { Identifiable } from '../common.types';
-import { ExperienceEntity } from './experience.entity';
-import { TicketEntity } from './ticket.entity';
 
 export type OrderView = OrderEntity & {
-  items: OrderViewItem[];
-};
-
-type OrderViewItem = {
-  experience: ExperienceEntity;
-  tickets: (OrderItemEntity & TicketEntity)[];
+  items: OrderItemEntity[];
 };
 
 export type OrderEntity = {
@@ -21,8 +14,8 @@ export type OrderEntity = {
 export type OrderItemEntity = {
   orderId: string;
   ticketId: string;
-  quantity: number;
-} & Identifiable;
+  serialNumber: string;
+};
 
 export enum PaymentStatus {
   PENDING = 'pending',
