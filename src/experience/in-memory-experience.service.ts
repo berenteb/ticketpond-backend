@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { WithoutId } from '../types/common.types';
 import { ExperienceEntity, ExperienceView } from '../types/entities/experience.entity';
 import { ExperienceServiceInterface } from '../types/service-interfaces/experience.service.interface';
@@ -14,15 +14,16 @@ export class InMemoryExperienceService implements ExperienceServiceInterface {
   async createExperience(experience: WithoutId<ExperienceEntity>): Promise<ExperienceEntity> {
     const newExperience: ExperienceEntity = {
       ...experience,
-      id: this.idCounter.toString(),
+      id: String(this.idCounter++),
     };
     this.experiences.push(newExperience);
-    this.idCounter++;
+    Logger.debug(`Created experience: ${newExperience}`, InMemoryExperienceService.name);
     return Promise.resolve(newExperience);
   }
 
   async deleteExperience(id: string): Promise<void> {
     this.experiences = this.experiences.filter((experience) => experience.id !== id);
+    Logger.debug(`Deleted experience with id: ${id}`, InMemoryExperienceService.name);
     return Promise.resolve();
   }
 
@@ -57,6 +58,7 @@ export class InMemoryExperienceService implements ExperienceServiceInterface {
       id,
     };
     this.experiences[index] = updatedExperience;
+    Logger.debug(`Updated experience: ${updatedExperience}`, InMemoryExperienceService.name);
     return Promise.resolve(updatedExperience);
   }
 }

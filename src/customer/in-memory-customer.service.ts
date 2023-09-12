@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { WithoutId } from '../types/common.types';
 import { CustomerEntity } from '../types/entities/customer.entity';
 import { CustomerServiceInterface } from '../types/service-interfaces/customer.service.interface';
@@ -14,11 +14,13 @@ export class InMemoryCustomerService extends CustomerServiceInterface {
       id: String(this.idCounter++),
     };
     this.customers.push(newCustomer);
+    Logger.debug(`Created customer: ${newCustomer}`, InMemoryCustomerService.name);
     return Promise.resolve(newCustomer);
   }
 
   deleteCustomer(id: string): Promise<void> {
     this.customers = this.customers.filter((customer) => customer.id !== id);
+    Logger.debug(`Deleted customer with id: ${id}`, InMemoryCustomerService.name);
     return Promise.resolve();
   }
 
@@ -36,6 +38,7 @@ export class InMemoryCustomerService extends CustomerServiceInterface {
       id,
     };
     this.customers = this.customers.map((customer) => (customer.id === id ? updatedCustomer : customer));
+    Logger.debug(`Updated customer: ${updatedCustomer}`, InMemoryCustomerService.name);
     return Promise.resolve(updatedCustomer);
   }
 }

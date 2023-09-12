@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { WithoutId } from '../types/common.types';
 import { MerchantEntity } from '../types/entities/merchant.entity';
 import { MerchantServiceInterface } from '../types/service-interfaces/merchant.service.interface';
@@ -14,11 +14,13 @@ export class InMemoryMerchantService extends MerchantServiceInterface {
       id: String(this.idCounter++),
     };
     this.merchants.push(newMerchant);
+    Logger.log(`Created merchant: ${newMerchant}`, InMemoryMerchantService.name);
     return Promise.resolve(newMerchant);
   }
 
   deleteMerchant(id: string): Promise<void> {
     this.merchants = this.merchants.filter((merchant) => merchant.id !== id);
+    Logger.log(`Deleted merchant with id: ${id}`, InMemoryMerchantService.name);
     return Promise.resolve();
   }
 
@@ -36,6 +38,7 @@ export class InMemoryMerchantService extends MerchantServiceInterface {
       id,
     };
     this.merchants = this.merchants.map((merchant) => (merchant.id === id ? updatedMerchant : merchant));
+    Logger.log(`Updated merchant: ${updatedMerchant}`, InMemoryMerchantService.name);
     return Promise.resolve(updatedMerchant);
   }
 }

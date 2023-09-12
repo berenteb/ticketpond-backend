@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { WithoutId } from '../types/common.types';
 import { CartView } from '../types/entities/cart.entity';
 import { OrderStatus, OrderView, PaymentStatus } from '../types/entities/order.entity';
@@ -27,11 +27,13 @@ export class InMemoryOrderService implements OrderServiceInterface {
   createOrder(cart: WithoutId<CartView>): Promise<OrderView> {
     const newOrder = mapCartToOrder(cart, String(this.idCounter++));
     this.orders.push(newOrder);
+    Logger.debug(`Created order: ${newOrder}`, InMemoryOrderService.name);
     return Promise.resolve(newOrder);
   }
 
   deleteOrder(id: string): Promise<void> {
     this.orders = this.orders.filter((order) => order.id !== id);
+    Logger.debug(`Deleted order with id: ${id}`, InMemoryOrderService.name);
     return Promise.resolve(undefined);
   }
 }

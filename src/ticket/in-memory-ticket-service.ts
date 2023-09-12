@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { WithoutId } from '../types/common.types';
 import { TicketEntity } from '../types/entities/ticket.entity';
 import { TicketServiceInterface } from '../types/service-interfaces/ticket.service.interface';
@@ -14,11 +14,13 @@ export class InMemoryTicketService implements TicketServiceInterface {
       id: String(this.idCounter++),
     };
     this.tickets.push(newTicket);
+    Logger.log(`Created ticket: ${newTicket}`, InMemoryTicketService.name);
     return Promise.resolve(newTicket);
   }
 
   deleteTicket(id: string): Promise<void> {
     this.tickets = this.tickets.filter((t) => t.id !== id);
+    Logger.log(`Deleted ticket with id: ${id}`, InMemoryTicketService.name);
     return Promise.resolve();
   }
 
@@ -41,6 +43,7 @@ export class InMemoryTicketService implements TicketServiceInterface {
       id,
     };
     this.tickets[index] = updatedTicket;
+    Logger.log(`Updated ticket: ${updatedTicket}`, InMemoryTicketService.name);
     return Promise.resolve(updatedTicket);
   }
 }

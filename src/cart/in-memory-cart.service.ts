@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { CartView } from '../types/entities/cart.entity';
+import { Injectable, Logger } from '@nestjs/common';
+import { CartItemEntity, CartView } from '../types/entities/cart.entity';
 import { CartServiceInterface } from '../types/service-interfaces/cart.service.interface';
 import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
 
 @Injectable()
-export class CartService implements CartServiceInterface {
+export class InMemoryCartService implements CartServiceInterface {
   private carts: CartView[] = [];
   private idCounter = 0;
 
@@ -14,6 +14,7 @@ export class CartService implements CartServiceInterface {
     const cart = this.carts.find((cart) => cart.id === cartId);
     await this.orderService.createOrder(cart);
     cart.items = [];
+    Logger.debug(`Checked out cart with id: ${cartId}`, InMemoryCartService.name);
     return Promise.resolve();
   }
 
@@ -24,16 +25,19 @@ export class CartService implements CartServiceInterface {
       items: [],
     };
     this.carts.push(cart);
+    Logger.debug(`Created cart: ${cart}`, InMemoryCartService.name);
     return Promise.resolve(cart);
   }
 
   deleteCart(cartId: string): Promise<void> {
     this.carts = this.carts.filter((cart) => cart.id !== cartId);
+    Logger.debug(`Deleted cart with id: ${cartId}`, InMemoryCartService.name);
     return Promise.resolve(undefined);
   }
 
   deleteCartForUser(userId: string): Promise<void> {
     this.carts = this.carts.filter((cart) => cart.userId !== userId);
+    Logger.debug(`Deleted cart with userId: ${userId}`, InMemoryCartService.name);
     return Promise.resolve(undefined);
   }
 
@@ -55,6 +59,7 @@ export class CartService implements CartServiceInterface {
       const ticketToRemove = cart.items.find((item) => item.ticketId === ticketId);
       if (!ticketToRemove) break;
       cart.items.filter((item) => item.ticketId !== ticketToRemove.ticketId);
+      Logger.debug(`Removed cart item: ${ticketToRemove}`, InMemoryCartService.name);
     }
 
     return Promise.resolve(cart);
@@ -64,11 +69,13 @@ export class CartService implements CartServiceInterface {
     const cart = await this.getCartById(cartId);
 
     for (let i = 0; i < quantity; i++) {
-      cart.items.push({
+      const item: CartItemEntity = {
         id: String(this.idCounter++),
         cartId,
         ticketId,
-      });
+      };
+      cart.items.push(item);
+      Logger.debug(`Added cart item: ${item}`, InMemoryCartService.name);
     }
     return Promise.resolve(cart);
   }
