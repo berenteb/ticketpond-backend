@@ -8,37 +8,36 @@ export class InMemoryCustomerService extends CustomerServiceInterface {
   private customers: CustomerEntity[] = [];
   private idCounter = 0;
 
-  createCustomer(customer: WithoutId<CustomerEntity>): Promise<CustomerEntity> {
+  async createCustomer(customer: WithoutId<CustomerEntity>): Promise<CustomerEntity> {
     const newCustomer = {
       ...customer,
       id: String(this.idCounter++),
     };
     this.customers.push(newCustomer);
     Logger.debug(`Created customer: ${newCustomer}`, InMemoryCustomerService.name);
-    return Promise.resolve(newCustomer);
+    return newCustomer;
   }
 
-  deleteCustomer(id: string): Promise<void> {
+  async deleteCustomer(id: string): Promise<void> {
     this.customers = this.customers.filter((customer) => customer.id !== id);
     Logger.debug(`Deleted customer with id: ${id}`, InMemoryCustomerService.name);
-    return Promise.resolve();
   }
 
-  getCustomerById(id: string): Promise<CustomerEntity> {
-    return Promise.resolve(this.customers.find((customer) => customer.id === id));
+  async getCustomerById(id: string): Promise<CustomerEntity> {
+    return this.customers.find((customer) => customer.id === id);
   }
 
-  getCustomers(): Promise<CustomerEntity[]> {
-    return Promise.resolve(this.customers);
+  async getCustomers(): Promise<CustomerEntity[]> {
+    return this.customers;
   }
 
-  updateCustomer(id: string, customer: WithoutId<CustomerEntity>): Promise<CustomerEntity> {
+  async updateCustomer(id: string, customer: WithoutId<CustomerEntity>): Promise<CustomerEntity> {
     const updatedCustomer = {
       ...customer,
       id,
     };
     this.customers = this.customers.map((customer) => (customer.id === id ? updatedCustomer : customer));
     Logger.debug(`Updated customer: ${updatedCustomer}`, InMemoryCustomerService.name);
-    return Promise.resolve(updatedCustomer);
+    return updatedCustomer;
   }
 }

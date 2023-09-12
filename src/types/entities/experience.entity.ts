@@ -4,8 +4,8 @@ import { TicketEntity } from './ticket.entity';
 export type ExperienceEntity = {
   name: string;
   description: string;
-  startDate: string;
-  endDate: string;
+  startDate: number;
+  endDate: number;
   location: string;
   bannerImage: string;
 } & Identifiable;

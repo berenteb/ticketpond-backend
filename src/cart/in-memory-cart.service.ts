@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CartItemEntity, CartView } from '../types/entities/cart.entity';
 import { CartServiceInterface } from '../types/service-interfaces/cart.service.interface';
 import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
@@ -12,10 +12,9 @@ export class InMemoryCartService implements CartServiceInterface {
 
   async checkout(cartId: string): Promise<void> {
     const cart = this.carts.find((cart) => cart.id === cartId);
-    await this.orderService.createOrder(cart);
+    await this.orderService.createOrder(JSON.parse(JSON.stringify(cart)));
     cart.items = [];
     Logger.debug(`Checked out cart with id: ${cartId}`, InMemoryCartService.name);
-    return Promise.resolve();
   }
 
   createCartForUser(userId: string): Promise<CartView> {
@@ -43,6 +42,8 @@ export class InMemoryCartService implements CartServiceInterface {
 
   getCartById(id: string): Promise<CartView> {
     const cart = this.carts.find((cart) => cart.id === id);
+    if (!cart) throw new NotFoundException(`Cart with id ${id} not found`);
+
     return Promise.resolve(cart);
   }
 
@@ -54,19 +55,19 @@ export class InMemoryCartService implements CartServiceInterface {
 
   async removeItemFromCart(cartId: string, ticketId: string, quantity: number): Promise<CartView> {
     const cart = await this.getCartById(cartId);
+    if (!cart) throw new NotFoundException(`Cart with id ${cartId} not found`);
 
-    for (let i = 0; i < quantity; i++) {
-      const ticketToRemove = cart.items.find((item) => item.ticketId === ticketId);
-      if (!ticketToRemove) break;
-      cart.items.filter((item) => item.ticketId !== ticketToRemove.ticketId);
-      Logger.debug(`Removed cart item: ${ticketToRemove}`, InMemoryCartService.name);
-    }
+    const ticketsToRemove = cart.items.filter((item) => item.ticketId === ticketId).splice(0, quantity);
+    cart.items = cart.items.filter((item) => !ticketsToRemove.includes(item));
+
+    Logger.debug(`Removed ${quantity} cart item(s)`, InMemoryCartService.name);
 
     return Promise.resolve(cart);
   }
 
   async addItemToCart(cartId: string, ticketId: string, quantity: number): Promise<CartView> {
     const cart = await this.getCartById(cartId);
+    if (!cart) throw new NotFoundException(`Cart with id ${cartId} not found`);
 
     for (let i = 0; i < quantity; i++) {
       const item: CartItemEntity = {

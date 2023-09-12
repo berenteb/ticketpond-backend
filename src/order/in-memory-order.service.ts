@@ -5,36 +5,34 @@ import { OrderStatus, OrderView, PaymentStatus } from '../types/entities/order.e
 import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
 import { generateSerialNumber } from '../util/serialNumber.util';
 
+let orders: OrderView[] = [];
+
 @Injectable()
 export class InMemoryOrderService implements OrderServiceInterface {
-  private orders: OrderView[] = [];
   private idCounter = 0;
 
-  getOrderById(id: string): Promise<OrderView> {
-    const order = this.orders.find((order) => order.id === id);
-    return Promise.resolve(order);
+  async getOrderById(id: string): Promise<OrderView> {
+    return orders.find((order) => order.id === id);
   }
 
-  getOrders(): Promise<OrderView[]> {
-    return Promise.resolve(this.orders);
+  async getOrders(): Promise<OrderView[]> {
+    return orders;
   }
 
-  getOrdersForUser(userId: string): Promise<OrderView[]> {
-    const orders = this.orders.filter((order) => order.userId === userId);
-    return Promise.resolve(orders);
+  async getOrdersForUser(userId: string): Promise<OrderView[]> {
+    return orders.filter((order) => order.userId === userId);
   }
 
-  createOrder(cart: WithoutId<CartView>): Promise<OrderView> {
+  async createOrder(cart: WithoutId<CartView>): Promise<OrderView> {
     const newOrder = mapCartToOrder(cart, String(this.idCounter++));
-    this.orders.push(newOrder);
-    Logger.debug(`Created order: ${newOrder}`, InMemoryOrderService.name);
-    return Promise.resolve(newOrder);
+    orders.push(newOrder);
+    Logger.debug(`Created order: ${JSON.stringify(newOrder)}`, InMemoryOrderService.name);
+    return newOrder;
   }
 
-  deleteOrder(id: string): Promise<void> {
-    this.orders = this.orders.filter((order) => order.id !== id);
+  async deleteOrder(id: string): Promise<void> {
+    orders = orders.filter((order) => order.id !== id);
     Logger.debug(`Deleted order with id: ${id}`, InMemoryOrderService.name);
-    return Promise.resolve(undefined);
   }
 }
 

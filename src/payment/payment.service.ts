@@ -4,15 +4,9 @@ import { PaymentServiceInterface } from '../types/service-interfaces/payment.ser
 
 @Injectable()
 export class PaymentService implements PaymentServiceInterface {
-  payForOrder(order: OrderView): Promise<void> {
-    return Promise.resolve(undefined);
-  }
+  async payForOrder(order: OrderView): Promise<void> {}
 
-  paymentFail(): Promise<void> {
-    return Promise.resolve(undefined);
-  }
+  async paymentFail(): Promise<void> {}
 
-  paymentSucceed(): Promise<void> {
-    return Promise.resolve(undefined);
-  }
+  async paymentSucceed(): Promise<void> {}
 }

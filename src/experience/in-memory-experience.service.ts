@@ -6,8 +6,8 @@ import { TicketServiceInterface } from '../types/service-interfaces/ticket.servi
 
 @Injectable()
 export class InMemoryExperienceService implements ExperienceServiceInterface {
-  private experiences: ExperienceEntity[];
-  private idCounter: number;
+  private experiences: ExperienceEntity[] = [];
+  private idCounter = 0;
 
   constructor(private readonly ticketService: TicketServiceInterface) {}
 
@@ -18,27 +18,25 @@ export class InMemoryExperienceService implements ExperienceServiceInterface {
     };
     this.experiences.push(newExperience);
     Logger.debug(`Created experience: ${newExperience}`, InMemoryExperienceService.name);
-    return Promise.resolve(newExperience);
+    return newExperience;
   }
 
   async deleteExperience(id: string): Promise<void> {
     this.experiences = this.experiences.filter((experience) => experience.id !== id);
     Logger.debug(`Deleted experience with id: ${id}`, InMemoryExperienceService.name);
-    return Promise.resolve();
   }
 
   async getExperienceById(id: string): Promise<ExperienceView> {
     const experience = this.experiences.find((experience) => experience.id === id);
     const ticketsForExperience = await this.ticketService.getTicketForExperience(id);
-    const experienceView: ExperienceView = {
+    return {
       ...experience,
       tickets: ticketsForExperience,
     };
-    return Promise.resolve(experienceView);
   }
 
   async getExperiences(): Promise<ExperienceView[]> {
-    const experiencesWithTickets = await Promise.all(
+    return await Promise.all(
       this.experiences.map(async (experience) => {
         const ticketsForExperience = await this.ticketService.getTicketForExperience(experience.id);
         const experienceView: ExperienceView = {
@@ -48,10 +46,9 @@ export class InMemoryExperienceService implements ExperienceServiceInterface {
         return experienceView;
       })
     );
-    return Promise.resolve(experiencesWithTickets);
   }
 
-  updateExperience(id: string, experience: WithoutId<ExperienceEntity>): Promise<ExperienceEntity> {
+  async updateExperience(id: string, experience: WithoutId<ExperienceEntity>): Promise<ExperienceEntity> {
     const index = this.experiences.findIndex((e) => e.id === id);
     const updatedExperience: ExperienceEntity = {
       ...experience,
@@ -59,6 +56,6 @@ export class InMemoryExperienceService implements ExperienceServiceInterface {
     };
     this.experiences[index] = updatedExperience;
     Logger.debug(`Updated experience: ${updatedExperience}`, InMemoryExperienceService.name);
-    return Promise.resolve(updatedExperience);
+    return updatedExperience;
   }
 }

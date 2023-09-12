@@ -5,6 +5,6 @@ export type TicketEntity = {
   name: string;
   description: string;
   price: number;
-  validFrom: string;
-  validUntil: string;
+  validFrom: number;
+  validUntil: number;
 } & Identifiable;
