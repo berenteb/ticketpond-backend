@@ -6,7 +6,7 @@ import { OrderServiceInterface } from '../types/service-interfaces/order.service
 import { generateSerialNumber } from '../util/serialNumber.util';
 
 @Injectable()
-export class OrderService implements OrderServiceInterface {
+export class InMemoryOrderService implements OrderServiceInterface {
   private orders: OrderView[] = [];
   private idCounter = 0;
 

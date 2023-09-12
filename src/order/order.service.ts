@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { WithoutId } from '../types/common.types';
+import { CartView } from '../types/entities/cart.entity';
 import { OrderView } from '../types/entities/order.entity';
 import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
 
@@ -17,11 +18,11 @@ export class OrderService implements OrderServiceInterface {
     return Promise.resolve([]);
   }
 
-  createOrder(order: WithoutId<OrderView>): Promise<OrderView> {
+  deleteOrder(id: string): Promise<void> {
     return Promise.resolve(undefined);
   }
 
-  deleteOrder(id: string): Promise<void> {
+  createOrder(cart: WithoutId<CartView>): Promise<OrderView> {
     return Promise.resolve(undefined);
   }
 }
