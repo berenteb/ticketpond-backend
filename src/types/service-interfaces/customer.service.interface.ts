@@ -1,10 +1,10 @@
-import { WithoutId } from '../common.types';
-import { CustomerEntity } from '../entities/customer.entity';
+import { Customer } from '@prisma/client';
+import { CreateCustomerDto, UpdateCustomerDto } from '../dtos/customer.dto';
 
 export abstract class CustomerServiceInterface {
-  abstract getCustomers(): Promise<CustomerEntity[]>;
-  abstract getCustomerById(id: string): Promise<CustomerEntity>;
-  abstract createCustomer(customer: WithoutId<CustomerEntity>): Promise<CustomerEntity>;
-  abstract updateCustomer(id: string, customer: WithoutId<CustomerEntity>): Promise<CustomerEntity>;
+  abstract getCustomers(): Promise<Customer[]>;
+  abstract getCustomerById(id: string): Promise<Customer>;
+  abstract createCustomer(customer: CreateCustomerDto): Promise<Customer>;
+  abstract updateCustomer(id: string, customer: UpdateCustomerDto): Promise<Customer>;
   abstract deleteCustomer(id: string): Promise<void>;
 }
