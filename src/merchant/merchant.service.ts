@@ -1,27 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { WithoutId } from '../types/common.types';
-import { MerchantEntity } from '../types/entities/merchant.entity';
+import { Merchant } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateMerchantDto, UpdateMerchantDto } from '../types/dtos/merchant.dto';
 import { MerchantServiceInterface } from '../types/service-interfaces/merchant.service.interface';
 
 @Injectable()
 export class MerchantService extends MerchantServiceInterface {
-  createMerchant(merchant: WithoutId<MerchantEntity>): Promise<MerchantEntity> {
-    return Promise.resolve(undefined);
+  constructor(private readonly prisma: PrismaService) {
+    super();
   }
 
-  deleteMerchant(id: string): Promise<void> {
-    return Promise.resolve(undefined);
+  async createMerchant(merchant: CreateMerchantDto): Promise<Merchant> {
+    return this.prisma.merchant.create({ data: merchant });
   }
 
-  getMerchantById(id: string): Promise<MerchantEntity> {
-    return Promise.resolve(undefined);
+  async getMerchantById(id: string): Promise<Merchant> {
+    return this.prisma.merchant.findUnique({ where: { id } });
   }
 
-  getMerchants(): Promise<MerchantEntity[]> {
-    return Promise.resolve([]);
+  async getMerchants(): Promise<Merchant[]> {
+    return this.prisma.merchant.findMany();
   }
 
-  updateMerchant(id: string, merchant: WithoutId<MerchantEntity>): Promise<MerchantEntity> {
-    return Promise.resolve(undefined);
+  async updateMerchant(id: string, merchant: UpdateMerchantDto): Promise<Merchant> {
+    return this.prisma.merchant.update({ where: { id }, data: merchant });
+  }
+
+  async deleteMerchant(id: string): Promise<void> {
+    this.prisma.merchant.delete({ where: { id } });
   }
 }

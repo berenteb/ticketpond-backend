@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { WithoutId } from '../types/common.types';
-import { MerchantEntity } from '../types/entities/merchant.entity';
+import { Merchant } from '@prisma/client';
+import { CreateMerchantDto, UpdateMerchantDto } from '../types/dtos/merchant.dto';
 import { MerchantServiceInterface } from '../types/service-interfaces/merchant.service.interface';
 
 @Controller('merchant')
@@ -8,27 +8,27 @@ export class MerchantController {
   constructor(private readonly merchantService: MerchantServiceInterface) {}
 
   @Get()
-  getMerchants() {
+  async getMerchants(): Promise<Merchant[]> {
     return this.merchantService.getMerchants();
   }
 
   @Get(':id')
-  getMerchant(@Param('id') id: string) {
+  async getMerchant(@Param('id') id: string): Promise<Merchant> {
     return this.merchantService.getMerchantById(id);
   }
 
   @Post()
-  createMerchant(@Body() merchant: WithoutId<MerchantEntity>) {
+  async createMerchant(@Body() merchant: CreateMerchantDto): Promise<Merchant> {
     return this.merchantService.createMerchant(merchant);
   }
 
   @Patch(':id')
-  updateMerchant(@Param('id') id: string, @Body() merchant: MerchantEntity) {
+  async updateMerchant(@Param('id') id: string, @Body() merchant: UpdateMerchantDto): Promise<Merchant> {
     return this.merchantService.updateMerchant(id, merchant);
   }
 
   @Delete(':id')
-  deleteMerchant(@Param('id') id: string) {
+  async deleteMerchant(@Param('id') id: string): Promise<void> {
     return this.merchantService.deleteMerchant(id);
   }
 }
