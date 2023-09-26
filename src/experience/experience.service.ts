@@ -1,27 +1,30 @@
 import { Injectable } from '@nestjs/common';
-import { WithoutId } from '../types/common.types';
-import { ExperienceEntity, ExperienceView } from '../types/entities/experience.entity';
+import { Experience } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateExperienceDto, ExperienceDto, UpdateExperienceDto } from '../types/dtos/experience.dto';
 import { ExperienceServiceInterface } from '../types/service-interfaces/experience.service.interface';
 
 @Injectable()
 export class ExperienceService implements ExperienceServiceInterface {
-  createExperience(experience: WithoutId<ExperienceEntity>): Promise<ExperienceEntity> {
-    return Promise.resolve(undefined);
+  constructor(private readonly prismaService: PrismaService) {}
+
+  async createExperience(experience: CreateExperienceDto): Promise<Experience> {
+    return this.prismaService.experience.create({ data: experience });
   }
 
-  deleteExperience(id: string): Promise<void> {
-    return Promise.resolve(undefined);
+  async getExperienceById(id: string): Promise<ExperienceDto> {
+    return this.prismaService.experience.findUnique({ where: { id }, include: { tickets: true, merchant: true } });
   }
 
-  getExperienceById(id: string): Promise<ExperienceView> {
-    return Promise.resolve(undefined);
+  async getExperiences(): Promise<Experience[]> {
+    return this.prismaService.experience.findMany();
   }
 
-  getExperiences(): Promise<ExperienceView[]> {
-    return Promise.resolve([]);
+  async updateExperience(id: string, experience: UpdateExperienceDto): Promise<Experience> {
+    return this.prismaService.experience.update({ where: { id }, data: experience });
   }
 
-  updateExperience(id: string, experience: WithoutId<ExperienceEntity>): Promise<ExperienceEntity> {
-    return Promise.resolve(undefined);
+  async deleteExperience(id: string): Promise<void> {
+    this.prismaService.experience.delete({ where: { id } });
   }
 }

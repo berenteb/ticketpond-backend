@@ -1,10 +1,10 @@
-import { WithoutId } from '../common.types';
-import { ExperienceEntity, ExperienceView } from '../entities/experience.entity';
+import { Experience } from '@prisma/client';
+import { CreateExperienceDto, ExperienceDto, UpdateExperienceDto } from '../dtos/experience.dto';
 
 export abstract class ExperienceServiceInterface {
-  abstract getExperiences(): Promise<ExperienceView[]>;
-  abstract getExperienceById(id: string): Promise<ExperienceView>;
-  abstract createExperience(experience: WithoutId<ExperienceEntity>): Promise<ExperienceEntity>;
-  abstract updateExperience(id: string, experience: WithoutId<ExperienceEntity>): Promise<ExperienceEntity>;
+  abstract getExperiences(): Promise<Experience[]>;
+  abstract getExperienceById(id: string): Promise<ExperienceDto>;
+  abstract createExperience(experience: CreateExperienceDto): Promise<Experience>;
+  abstract updateExperience(id: string, experience: UpdateExperienceDto): Promise<Experience>;
   abstract deleteExperience(id: string): Promise<void>;
 }

@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { WithoutId } from '../types/common.types';
-import { ExperienceEntity, ExperienceView } from '../types/entities/experience.entity';
+import { Experience } from '@prisma/client';
+import { CreateExperienceDto, ExperienceDto, UpdateExperienceDto } from '../types/dtos/experience.dto';
 import { ExperienceServiceInterface } from '../types/service-interfaces/experience.service.interface';
 
 @Controller('experience')
@@ -8,30 +8,27 @@ export class ExperienceController {
   constructor(private readonly experienceService: ExperienceServiceInterface) {}
 
   @Get()
-  getExperiences(): Promise<ExperienceView[]> {
+  async getExperiences(): Promise<Experience[]> {
     return this.experienceService.getExperiences();
   }
 
   @Get(':id')
-  getExperienceById(@Param('id') id: string): Promise<ExperienceView> {
+  async getExperienceById(@Param('id') id: string): Promise<ExperienceDto> {
     return this.experienceService.getExperienceById(id);
   }
 
   @Post()
-  createExperience(@Body() experience: WithoutId<ExperienceEntity>): Promise<ExperienceEntity> {
+  async createExperience(@Body() experience: CreateExperienceDto): Promise<Experience> {
     return this.experienceService.createExperience(experience);
   }
 
   @Patch(':id')
-  updateExperience(
-    @Param('id') id: string,
-    @Body() experience: WithoutId<ExperienceEntity>
-  ): Promise<ExperienceEntity> {
+  async updateExperience(@Param('id') id: string, @Body() experience: UpdateExperienceDto): Promise<Experience> {
     return this.experienceService.updateExperience(id, experience);
   }
 
   @Delete(':id')
-  deleteExperience(@Param('id') id: string): Promise<void> {
+  async deleteExperience(@Param('id') id: string): Promise<void> {
     return this.experienceService.deleteExperience(id);
   }
 }
