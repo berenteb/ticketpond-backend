@@ -1,31 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import { WithoutId } from '../types/common.types';
-import { TicketEntity } from '../types/entities/ticket.entity';
+import { Ticket } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateTicketDto, UpdateTicketDto } from '../types/dtos/ticket.dto';
 import { TicketServiceInterface } from '../types/service-interfaces/ticket.service.interface';
 
 @Injectable()
 export class TicketService implements TicketServiceInterface {
-  createTicket(ticket: WithoutId<TicketEntity>): Promise<TicketEntity> {
-    return Promise.resolve(undefined);
+  constructor(private readonly prismaService: PrismaService) {}
+
+  async createTicket(ticket: CreateTicketDto): Promise<Ticket> {
+    return this.prismaService.ticket.create({ data: ticket });
   }
 
-  deleteTicket(id: string): Promise<void> {
-    return Promise.resolve(undefined);
+  async getTicketById(id: string): Promise<Ticket> {
+    return this.prismaService.ticket.findUnique({ where: { id } });
   }
 
-  getTicketById(id: string): Promise<TicketEntity> {
-    return Promise.resolve(undefined);
+  async getTicketForExperience(experienceId: string): Promise<Ticket> {
+    return this.prismaService.ticket.findFirst({ where: { experienceId } });
   }
 
-  getTicketForExperience(experienceId: string): Promise<TicketEntity> {
-    return Promise.resolve(undefined);
+  async getTickets(): Promise<Ticket[]> {
+    return this.prismaService.ticket.findMany();
   }
 
-  getTickets(): Promise<TicketEntity[]> {
-    return Promise.resolve([]);
+  async updateTicket(id: string, ticket: UpdateTicketDto): Promise<Ticket> {
+    return this.prismaService.ticket.update({ where: { id }, data: ticket });
   }
 
-  updateTicket(id: string, ticket: WithoutId<TicketEntity>): Promise<TicketEntity> {
-    return Promise.resolve(undefined);
+  async deleteTicket(id: string): Promise<void> {
+    this.prismaService.ticket.delete({ where: { id } });
   }
 }
