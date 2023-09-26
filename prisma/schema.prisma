@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id        String  @id @default(uuid())
+  firstName String
+  lastName  String
+  email     String
+  address   String
+  phone     String
+  cart      Cart?
+  Order     Order[]
+}
+
+model Merchant {
+  id          String       @id @default(uuid())
+  name        String
+  description String
+  email       String
+  address     String
+  phone       String
+  experiences Experience[]
+}
+
+model Experience {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  startDate   DateTime
+  endDate     DateTime
+  bannerImage String
+  merchant    Merchant @relation(fields: [merchantId], references: [id])
+  merchantId  String
+  tickets     Ticket[]
+}
+
+model Ticket {
+  id           String      @id @default(uuid())
+  name         String
+  description  String
+  price        Float
+  validFrom    DateTime
+  validTo      DateTime
+  experience   Experience  @relation(fields: [experienceId], references: [id])
+  experienceId String
+  CartItem     CartItem[]
+  OrderItem    OrderItem[]
+}
+
+model Cart {
+  id         String     @id @default(uuid())
+  customer   Customer   @relation(fields: [customerId], references: [id])
+  customerId String     @unique
+  items      CartItem[]
+}
+
+model CartItem {
+  id       String @id @default(uuid())
+  cart     Cart   @relation(fields: [cartId], references: [id])
+  cartId   String
+  ticket   Ticket @relation(fields: [ticketId], references: [id])
+  ticketId String
+}
+
+model Order {
+  id         String      @id @default(uuid())
+  customer   Customer    @relation(fields: [customerId], references: [id])
+  customerId String
+  createdAt  DateTime    @default(now())
+  items      OrderItem[]
+}
+
+model OrderItem {
+  id           String @id @default(uuid())
+  order        Order  @relation(fields: [orderId], references: [id])
+  orderId      String
+  ticket       Ticket @relation(fields: [ticketId], references: [id])
+  ticketId     String
+  quantity     Int
+  price        Float
+  serialNumber String
+}
