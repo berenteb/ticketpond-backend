@@ -7,7 +7,7 @@ export class CartController {
 
   @Get('user/:id')
   async getCartForUser(@Param('id') id: string) {
-    return this.cartService.getCartForUser(id);
+    return this.cartService.getCartForCustomer(id);
   }
 
   @Post(':id/checkout')

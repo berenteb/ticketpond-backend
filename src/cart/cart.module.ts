@@ -3,11 +3,11 @@ import { InMemoryOrderService } from '../order/in-memory-order.service';
 import { CartServiceInterface } from '../types/service-interfaces/cart.service.interface';
 import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
 import { CartController } from './cart.controller';
-import { InMemoryCartService } from './in-memory-cart.service';
+import { CartService } from './cart.service';
 
 @Module({
   providers: [
-    { provide: CartServiceInterface, useClass: InMemoryCartService },
+    { provide: CartServiceInterface, useClass: CartService },
     { provide: OrderServiceInterface, useClass: InMemoryOrderService },
   ],
   controllers: [CartController],

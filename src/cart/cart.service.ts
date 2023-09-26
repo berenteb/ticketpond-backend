@@ -1,38 +1,62 @@
 import { Injectable } from '@nestjs/common';
-import { CartView } from '../types/entities/cart.entity';
+import { PrismaService } from '../prisma/prisma.service';
+import { CartDto } from '../types/dtos/cart.dto';
 import { CartServiceInterface } from '../types/service-interfaces/cart.service.interface';
+import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
 
 @Injectable()
 export class CartService implements CartServiceInterface {
-  addItemToCart(cartId: string, ticketId: string, quantity: number): Promise<CartView> {
-    return Promise.resolve(undefined);
+  constructor(private readonly prismaService: PrismaService, private readonly orderService: OrderServiceInterface) {}
+
+  async createCartForCustomer(customerId: string): Promise<CartDto> {
+    return this.prismaService.cart.create({
+      data: { customerId },
+      include: { items: { include: { ticket: { include: { experience: true } } } } },
+    });
   }
 
-  checkout(cartId: string): Promise<void> {
-    return Promise.resolve(undefined);
+  async getCartById(id: string): Promise<CartDto> {
+    return this.prismaService.cart.findUnique({
+      where: { id },
+      include: { items: { include: { ticket: { include: { experience: true } } } } },
+    });
   }
 
-  createCartForUser(userId: string): Promise<CartView> {
-    return Promise.resolve(undefined);
+  async getCartForCustomer(customerId: string): Promise<CartDto> {
+    return this.prismaService.cart.findUnique({
+      where: { customerId },
+      include: { items: { include: { ticket: { include: { experience: true } } } } },
+    });
   }
 
-  deleteCart(cartId: string): Promise<void> {
-    return Promise.resolve(undefined);
+  async addItemToCart(cartId: string, ticketId: string, quantity: number): Promise<CartDto> {
+    for (let i = 0; i < quantity; i++) {
+      await this.prismaService.cartItem.create({ data: { cartId, ticketId } });
+    }
+    return this.getCartById(cartId);
   }
 
-  deleteCartForUser(userId: string): Promise<void> {
-    return Promise.resolve(undefined);
+  async removeItemFromCart(cartId: string, ticketId: string, quantity: number): Promise<CartDto> {
+    for (let i = 0; i < quantity; i++) {
+      const deleteCandidate = await this.prismaService.cartItem.findFirst({ where: { cartId, ticketId } });
+      if (!deleteCandidate) {
+        break;
+      }
+      await this.prismaService.cartItem.delete({ where: { id: deleteCandidate.id } });
+    }
+    return this.getCartById(cartId);
   }
 
-  getCartById(id: string): Promise<CartView> {
-    return Promise.resolve(undefined);
+  async checkout(customerId: string): Promise<void> {
+    const cart = await this.getCartForCustomer(customerId);
+    await this.orderService.createOrder(cart);
   }
 
-  getCartForUser(userId: string): Promise<CartView> {
-    return Promise.resolve(undefined);
+  async deleteCart(cartId: string): Promise<void> {
+    this.prismaService.cart.delete({ where: { id: cartId } });
   }
 
-  removeItemFromCart(cartId: string, ticketId: string, quantity: number): Promise<CartView> {
-    return Promise.resolve(undefined);
+  async deleteCartForCustomer(customerId: string): Promise<void> {
+    this.prismaService.cart.delete({ where: { customerId } });
   }
 }

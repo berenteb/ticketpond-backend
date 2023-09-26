@@ -1,3 +1,4 @@
+import { Experience } from '@prisma/client';
 import { IsDate, IsDecimal, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateTicketDto {
@@ -49,4 +50,13 @@ export class UpdateTicketDto {
   @IsNotEmpty()
   @IsOptional()
   validTo: Date;
+}
+
+export class TicketDto {
+  name: string;
+  description: string;
+  price: number;
+  validFrom: Date;
+  validTo: Date;
+  experience: Experience;
 }
