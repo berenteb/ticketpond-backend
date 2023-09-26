@@ -1,27 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { WithoutId } from '../types/common.types';
-import { CustomerEntity } from '../types/entities/customer.entity';
+import { Customer } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateCustomerDto, UpdateCustomerDto } from '../types/dtos/customer.dto';
 import { CustomerServiceInterface } from '../types/service-interfaces/customer.service.interface';
 
 @Injectable()
 export class CustomerService extends CustomerServiceInterface {
-  createCustomer(customer: WithoutId<CustomerEntity>): Promise<CustomerEntity> {
-    return Promise.resolve(undefined);
+  constructor(private readonly prismaService: PrismaService) {
+    super();
+  }
+  async createCustomer(customer: CreateCustomerDto): Promise<Customer> {
+    return this.prismaService.customer.create({ data: customer });
   }
 
-  deleteCustomer(id: string): Promise<void> {
-    return Promise.resolve(undefined);
+  async deleteCustomer(id: string): Promise<void> {
+    this.prismaService.customer.delete({ where: { id } });
   }
 
-  getCustomerById(id: string): Promise<CustomerEntity> {
-    return Promise.resolve(undefined);
+  async getCustomerById(id: string): Promise<Customer> {
+    return this.prismaService.customer.findUnique({ where: { id } });
   }
 
-  getCustomers(): Promise<CustomerEntity[]> {
-    return Promise.resolve([]);
+  async getCustomers(): Promise<Customer[]> {
+    return this.prismaService.customer.findMany();
   }
 
-  updateCustomer(id: string, customer: WithoutId<CustomerEntity>): Promise<CustomerEntity> {
-    return Promise.resolve(undefined);
+  async updateCustomer(id: string, customer: UpdateCustomerDto): Promise<Customer> {
+    return this.prismaService.customer.update({ where: { id }, data: customer });
   }
 }
