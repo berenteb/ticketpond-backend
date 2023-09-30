@@ -27,10 +27,6 @@ export class AddToCartDto {
   @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   @IsString()
   @IsNotEmpty()
-  userId: string;
-  @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
-  @IsString()
-  @IsNotEmpty()
   ticketId: string;
   @ApiProperty({ example: 1 })
   @IsNumber()
@@ -39,10 +35,6 @@ export class AddToCartDto {
 }
 
 export class RemoveFromCartDto {
-  @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
-  @IsString()
-  @IsNotEmpty()
-  userId: string;
   @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   @IsString()
   @IsNotEmpty()
