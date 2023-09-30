@@ -72,11 +72,13 @@ model CartItem {
 }
 
 model Order {
-  id         String      @id @default(uuid())
-  customer   Customer    @relation(fields: [customerId], references: [id])
-  customerId String
-  createdAt  DateTime    @default(now())
-  items      OrderItem[]
+  id            String        @id @default(uuid())
+  customer      Customer      @relation(fields: [customerId], references: [id])
+  customerId    String
+  createdAt     DateTime      @default(now())
+  items         OrderItem[]
+  orderStatus   OrderStatus   @default(PENDING)
+  paymentStatus PaymentStatus @default(UNPAID)
 }
 
 model OrderItem {
@@ -87,4 +89,16 @@ model OrderItem {
   ticketId     String
   price        Float
   serialNumber String
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+enum PaymentStatus {
+  UNPAID
+  FAIL
+  SUCCESS
 }

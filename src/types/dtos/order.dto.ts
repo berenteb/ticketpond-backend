@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Order, OrderItem } from '@prisma/client';
+import { $Enums, Order, OrderItem } from '@prisma/client';
 
 export class OrderItemDto implements OrderItem {
   @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
@@ -23,4 +23,8 @@ export class OrderDto implements Order {
   createdAt: Date;
   @ApiProperty({ type: [OrderItemDto] })
   items: OrderItemDto[];
+  @ApiProperty({ example: $Enums.PaymentStatus.UNPAID })
+  paymentStatus: $Enums.PaymentStatus;
+  @ApiProperty({ example: $Enums.OrderStatus.PENDING })
+  orderStatus: $Enums.OrderStatus;
 }
