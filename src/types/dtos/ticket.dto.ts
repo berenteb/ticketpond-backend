@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Ticket } from '@prisma/client';
-import { IsDate, IsDecimal, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { WithoutId } from '../common.types';
 import { ExperienceDto } from './experience.dto';
 
@@ -15,17 +15,17 @@ export class CreateTicketDto implements WithoutId<Ticket> {
   description: string;
 
   @ApiProperty({ example: 123.0 })
-  @IsDecimal()
+  @IsNumber()
   @IsNotEmpty()
   price: number;
 
   @ApiProperty({ example: '2023-06-01T00:00:00.000Z' })
-  @IsDate()
+  @IsDateString()
   @IsNotEmpty()
   validFrom: Date;
 
   @ApiProperty({ example: '2023-06-02T00:00:00.000Z' })
-  @IsDate()
+  @IsDateString()
   @IsNotEmpty()
   validTo: Date;
 
@@ -48,19 +48,19 @@ export class UpdateTicketDto implements Partial<WithoutId<Ticket>> {
   description: string;
 
   @ApiPropertyOptional({ example: 123.0 })
-  @IsDecimal()
+  @IsNumber()
   @IsNotEmpty()
   @IsOptional()
   price: number;
 
   @ApiPropertyOptional({ example: '2023-06-01T00:00:00.000Z' })
-  @IsDate()
+  @IsDateString()
   @IsNotEmpty()
   @IsOptional()
   validFrom: Date;
 
   @ApiPropertyOptional({ example: '2023-06-02T00:00:00.000Z' })
-  @IsDate()
+  @IsDateString()
   @IsNotEmpty()
   @IsOptional()
   validTo: Date;
