@@ -1,11 +1,13 @@
 import { CartDto } from '../dtos/cart.dto';
-import { OrderView } from '../entities/order.entity';
+import { OrderDto } from '../dtos/order.dto';
 
 export abstract class OrderServiceInterface {
-  abstract getOrders(): Promise<OrderView[]>;
-  abstract getOrdersForUser(userId: string): Promise<OrderView[]>;
-  abstract getOrderById(id: string): Promise<OrderView>;
+  abstract getOrders(): Promise<OrderDto[]>;
 
-  abstract createOrder(cart: CartDto): Promise<OrderView>;
+  abstract getOrdersForCustomer(userId: string): Promise<OrderDto[]>;
+
+  abstract getOrderById(id: string): Promise<OrderDto>;
+
+  abstract createOrder(cart: CartDto): Promise<OrderDto>;
   abstract deleteOrder(id: string): Promise<void>;
 }

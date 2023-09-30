@@ -53,6 +53,7 @@ export class UpdateTicketDto {
 }
 
 export class TicketDto {
+  id: string;
   name: string;
   description: string;
   price: number;

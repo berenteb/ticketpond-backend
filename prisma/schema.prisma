@@ -18,7 +18,7 @@ model Customer {
   address   String
   phone     String
   cart      Cart?
-  Order     Order[]
+  order     Order[]
 }
 
 model Merchant {
@@ -52,8 +52,8 @@ model Ticket {
   validTo      DateTime
   experience   Experience  @relation(fields: [experienceId], references: [id])
   experienceId String
-  CartItem     CartItem[]
-  OrderItem    OrderItem[]
+  cartItem     CartItem[]
+  orderItem    OrderItem[]
 }
 
 model Cart {
@@ -85,7 +85,6 @@ model OrderItem {
   orderId      String
   ticket       Ticket @relation(fields: [ticketId], references: [id])
   ticketId     String
-  quantity     Int
   price        Float
   serialNumber String
 }

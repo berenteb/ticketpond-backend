@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Delete, Get, Param } from '@nestjs/common';
 import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
 
 @Controller('order')
@@ -17,6 +17,11 @@ export class OrderController {
 
   @Get('user/:id')
   async getOrdersByUser(@Param('id') id: string) {
-    return await this.orderService.getOrdersForUser(id);
+    return await this.orderService.getOrdersForCustomer(id);
+  }
+
+  @Delete(':id')
+  async deleteOrder(@Param('id') id: string) {
+    return await this.orderService.deleteOrder(id);
   }
 }
