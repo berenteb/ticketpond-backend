@@ -9,7 +9,6 @@ export class ExperienceService implements ExperienceServiceInterface {
   constructor(private readonly prismaService: PrismaService) {}
 
   async createExperience(experience: CreateExperienceDto): Promise<Experience> {
-    Logger.debug(experience);
     const created = await this.prismaService.experience.create({ data: experience });
     Logger.debug(`Created experience with id ${created.id}`);
     return created;
