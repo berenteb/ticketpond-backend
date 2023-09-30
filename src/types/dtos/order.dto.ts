@@ -1,7 +1,26 @@
-import { OrderItem } from '@prisma/client';
+import { ApiProperty } from '@nestjs/swagger';
+import { Order, OrderItem } from '@prisma/client';
 
-export class OrderDto {
+export class OrderItemDto implements OrderItem {
+  @ApiProperty()
   id: string;
+  @ApiProperty()
+  orderId: string;
+  @ApiProperty()
+  price: number;
+  @ApiProperty()
+  serialNumber: string;
+  @ApiProperty()
+  ticketId: string;
+}
+
+export class OrderDto implements Order {
+  @ApiProperty()
+  id: string;
+  @ApiProperty()
+  customerId: string;
+  @ApiProperty()
   createdAt: Date;
-  items: OrderItem[];
+  @ApiProperty({ type: [OrderItemDto] })
+  items: OrderItemDto[];
 }

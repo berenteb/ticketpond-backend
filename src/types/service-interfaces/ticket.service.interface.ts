@@ -1,12 +1,14 @@
-import { Ticket } from '@prisma/client';
-import { CreateTicketDto, UpdateTicketDto } from '../dtos/ticket.dto';
+import { CreateTicketDto, DeepTicketDto, TicketDto, UpdateTicketDto } from '../dtos/ticket.dto';
 
 export abstract class TicketServiceInterface {
-  abstract getTickets(): Promise<Ticket[]>;
-  abstract getTicketById(id: string): Promise<Ticket>;
+  abstract getTickets(): Promise<TicketDto[]>;
 
-  abstract getTicketsForExperience(experienceId: string): Promise<Ticket[]>;
-  abstract createTicket(ticket: CreateTicketDto): Promise<Ticket>;
-  abstract updateTicket(id: string, ticket: UpdateTicketDto): Promise<Ticket>;
+  abstract getTicketById(id: string): Promise<DeepTicketDto>;
+
+  abstract getTicketsForExperience(experienceId: string): Promise<TicketDto[]>;
+
+  abstract createTicket(ticket: CreateTicketDto): Promise<TicketDto>;
+
+  abstract updateTicket(id: string, ticket: UpdateTicketDto): Promise<TicketDto>;
   abstract deleteTicket(id: string): Promise<void>;
 }

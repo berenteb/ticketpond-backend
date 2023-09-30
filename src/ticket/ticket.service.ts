@@ -1,40 +1,39 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Ticket } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateTicketDto, UpdateTicketDto } from '../types/dtos/ticket.dto';
+import { CreateTicketDto, DeepTicketDto, TicketDto, UpdateTicketDto } from '../types/dtos/ticket.dto';
 import { TicketServiceInterface } from '../types/service-interfaces/ticket.service.interface';
 
 @Injectable()
 export class TicketService implements TicketServiceInterface {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async createTicket(ticket: CreateTicketDto): Promise<Ticket> {
+  async createTicket(ticket: CreateTicketDto): Promise<TicketDto> {
     const created = await this.prismaService.ticket.create({ data: ticket });
     Logger.debug(`Created ticket with id ${created.id}`);
     return created;
   }
 
-  async getTicketById(id: string): Promise<Ticket> {
-    const ticket = await this.prismaService.ticket.findUnique({ where: { id } });
+  async getTicketById(id: string): Promise<DeepTicketDto> {
+    const ticket = await this.prismaService.ticket.findUnique({ where: { id }, include: { experience: true } });
     if (!ticket) {
       throw new NotFoundException(`Ticket with id ${id} not found`);
     }
     return ticket;
   }
 
-  async getTicketsForExperience(experienceId: string): Promise<Ticket[]> {
+  async getTicketsForExperience(experienceId: string): Promise<TicketDto[]> {
     const tickets = await this.prismaService.ticket.findMany({ where: { experienceId } });
     Logger.debug(`Found ${tickets.length} tickets for experience ${experienceId}`);
     return tickets;
   }
 
-  async getTickets(): Promise<Ticket[]> {
+  async getTickets(): Promise<TicketDto[]> {
     const tickets = await this.prismaService.ticket.findMany();
     Logger.debug(`Found ${tickets.length} tickets`);
     return tickets;
   }
 
-  async updateTicket(id: string, ticket: UpdateTicketDto): Promise<Ticket> {
+  async updateTicket(id: string, ticket: UpdateTicketDto): Promise<TicketDto> {
     const updated = await this.prismaService.ticket.update({ where: { id }, data: ticket });
     Logger.debug(`Updated ticket with id ${id}`);
     return updated;

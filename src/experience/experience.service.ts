@@ -1,7 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Experience } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateExperienceDto, ExperienceDto, UpdateExperienceDto } from '../types/dtos/experience.dto';
+import { CreateExperienceDto, DeepExperienceDto, UpdateExperienceDto } from '../types/dtos/experience.dto';
 import { ExperienceServiceInterface } from '../types/service-interfaces/experience.service.interface';
 
 @Injectable()
@@ -9,12 +9,13 @@ export class ExperienceService implements ExperienceServiceInterface {
   constructor(private readonly prismaService: PrismaService) {}
 
   async createExperience(experience: CreateExperienceDto): Promise<Experience> {
+    Logger.debug(experience);
     const created = await this.prismaService.experience.create({ data: experience });
     Logger.debug(`Created experience with id ${created.id}`);
     return created;
   }
 
-  async getExperienceById(id: string): Promise<ExperienceDto> {
+  async getExperienceById(id: string): Promise<DeepExperienceDto> {
     const experience = await this.prismaService.experience.findUnique({
       where: { id },
       include: { tickets: true, merchant: true },
