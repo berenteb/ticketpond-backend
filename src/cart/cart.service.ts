@@ -34,11 +34,14 @@ export class CartService implements CartServiceInterface {
       where: { customerId },
       include: { items: { include: { ticket: { include: { experience: true } } } } },
     });
-    if (!cart) {
-      throw new NotFoundException(`Cart for customer ${customerId} not found`);
+    if (cart) {
+      Logger.debug(`Found cart for customer ${customerId}`);
+      return cart;
+    } else {
+      const created = await this.createCartForCustomer(customerId);
+      Logger.debug(`Created cart for customer ${customerId} with id ${created.id}`);
+      return created;
     }
-    Logger.debug(`Found cart for customer ${customerId}`);
-    return cart;
   }
 
   async addItemToCart(cartId: string, ticketId: string, quantity: number): Promise<CartDto> {
