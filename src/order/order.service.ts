@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CartDto } from '../types/dtos/cart.dto';
 import { OrderDto } from '../types/dtos/order.dto';
@@ -10,33 +10,43 @@ export class OrderService implements OrderServiceInterface {
   constructor(private readonly prisma: PrismaService) {}
 
   async getOrderById(id: string): Promise<OrderDto> {
-    return this.prisma.order.findUnique({
+    const order = await this.prisma.order.findUnique({
       where: { id },
       include: { items: { include: { ticket: { include: { experience: true } } } } },
     });
+    if (!order) {
+      throw new NotFoundException(`Order with id ${id} not found`);
+    }
+    Logger.debug(`Found order with id ${id}`);
+    return order;
   }
 
   async getOrders(): Promise<OrderDto[]> {
-    return this.prisma.order.findMany({
+    const orders = await this.prisma.order.findMany({
       include: { items: { include: { ticket: { include: { experience: true } } } } },
     });
+    Logger.debug(`Found ${orders.length} orders`);
+    return orders;
   }
 
   async getOrdersForCustomer(customerId: string): Promise<OrderDto[]> {
-    return this.prisma.order.findMany({
+    const order = await this.prisma.order.findMany({
       where: { customerId },
       include: { items: { include: { ticket: { include: { experience: true } } } } },
     });
+    Logger.debug(`Found ${order.length} orders for customer with id ${customerId}`);
+    return order;
   }
 
   async deleteOrder(id: string): Promise<void> {
-    this.prisma.order.delete({ where: { id } });
-    this.prisma.orderItem.deleteMany({ where: { orderId: id } });
+    await this.prisma.order.delete({ where: { id } });
+    await this.prisma.orderItem.deleteMany({ where: { orderId: id } });
+    Logger.debug(`Deleted order with id ${id}`);
   }
 
   async createOrder(cart: CartDto): Promise<OrderDto> {
     const { customerId, items } = cart;
-    return this.prisma.order.create({
+    const created = await this.prisma.order.create({
       data: {
         customerId,
         items: {
@@ -49,5 +59,7 @@ export class OrderService implements OrderServiceInterface {
       },
       include: { items: { include: { ticket: { include: { experience: true } } } } },
     });
+    Logger.debug(`Created order with id ${created.id}`);
+    return created;
   }
 }

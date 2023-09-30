@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Experience } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateExperienceDto, ExperienceDto, UpdateExperienceDto } from '../types/dtos/experience.dto';
@@ -9,22 +9,37 @@ export class ExperienceService implements ExperienceServiceInterface {
   constructor(private readonly prismaService: PrismaService) {}
 
   async createExperience(experience: CreateExperienceDto): Promise<Experience> {
-    return this.prismaService.experience.create({ data: experience });
+    const created = await this.prismaService.experience.create({ data: experience });
+    Logger.debug(`Created experience with id ${created.id}`);
+    return created;
   }
 
   async getExperienceById(id: string): Promise<ExperienceDto> {
-    return this.prismaService.experience.findUnique({ where: { id }, include: { tickets: true, merchant: true } });
+    const experience = await this.prismaService.experience.findUnique({
+      where: { id },
+      include: { tickets: true, merchant: true },
+    });
+    if (!experience) {
+      throw new NotFoundException(`Experience with id ${id} not found`);
+    }
+    Logger.debug(`Found experience with id ${id}`);
+    return experience;
   }
 
   async getExperiences(): Promise<Experience[]> {
-    return this.prismaService.experience.findMany();
+    const experiences = await this.prismaService.experience.findMany();
+    Logger.debug(`Found ${experiences.length} experiences`);
+    return experiences;
   }
 
   async updateExperience(id: string, experience: UpdateExperienceDto): Promise<Experience> {
-    return this.prismaService.experience.update({ where: { id }, data: experience });
+    const updatedExperience = await this.prismaService.experience.update({ where: { id }, data: experience });
+    Logger.debug(`Updated experience with id ${id}`);
+    return updatedExperience;
   }
 
   async deleteExperience(id: string): Promise<void> {
-    this.prismaService.experience.delete({ where: { id } });
+    await this.prismaService.experience.delete({ where: { id } });
+    Logger.debug(`Deleted experience with id ${id}`);
   }
 }

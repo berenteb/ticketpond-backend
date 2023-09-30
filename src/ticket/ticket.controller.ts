@@ -18,8 +18,8 @@ export class TicketController {
   }
 
   @Get('experience/:id')
-  async getTicketForExperience(@Param('id') experienceId: string): Promise<Ticket> {
-    return await this.ticketService.getTicketForExperience(experienceId);
+  async getTicketsForExperience(@Param('id') experienceId: string): Promise<Ticket[]> {
+    return await this.ticketService.getTicketsForExperience(experienceId);
   }
 
   @Post()

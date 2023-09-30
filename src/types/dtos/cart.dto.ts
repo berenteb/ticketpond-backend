@@ -2,6 +2,7 @@ import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { TicketDto } from './ticket.dto';
 
 export class CartDto {
+  id: string;
   customerId: string;
   items: CartItemDto[];
 }
