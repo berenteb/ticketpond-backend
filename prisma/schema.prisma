@@ -38,7 +38,7 @@ model Experience {
   startDate   DateTime
   endDate     DateTime
   bannerImage String
-  merchant    Merchant @relation(fields: [merchantId], references: [id])
+  merchant    Merchant @relation(fields: [merchantId], references: [id], onDelete: Restrict)
   merchantId  String
   tickets     Ticket[]
 }
@@ -50,7 +50,7 @@ model Ticket {
   price        Float
   validFrom    DateTime
   validTo      DateTime
-  experience   Experience  @relation(fields: [experienceId], references: [id])
+  experience   Experience  @relation(fields: [experienceId], references: [id], onDelete: Restrict)
   experienceId String
   cartItem     CartItem[]
   orderItem    OrderItem[]
@@ -58,22 +58,22 @@ model Ticket {
 
 model Cart {
   id         String     @id @default(uuid())
-  customer   Customer   @relation(fields: [customerId], references: [id])
+  customer   Customer   @relation(fields: [customerId], references: [id], onDelete: Cascade)
   customerId String     @unique
   items      CartItem[]
 }
 
 model CartItem {
   id       String @id @default(uuid())
-  cart     Cart   @relation(fields: [cartId], references: [id])
+  cart     Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
   cartId   String
-  ticket   Ticket @relation(fields: [ticketId], references: [id])
+  ticket   Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
   ticketId String
 }
 
 model Order {
   id            String        @id @default(uuid())
-  customer      Customer      @relation(fields: [customerId], references: [id])
+  customer      Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
   customerId    String
   createdAt     DateTime      @default(now())
   items         OrderItem[]
@@ -83,9 +83,9 @@ model Order {
 
 model OrderItem {
   id           String @id @default(uuid())
-  order        Order  @relation(fields: [orderId], references: [id])
+  order        Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId      String
-  ticket       Ticket @relation(fields: [ticketId], references: [id])
+  ticket       Ticket @relation(fields: [ticketId], references: [id], onDelete: Restrict)
   ticketId     String
   price        Float
   serialNumber String
