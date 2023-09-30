@@ -6,26 +6,26 @@ import { MerchantDto } from './merchant.dto';
 import { TicketDto } from './ticket.dto';
 
 export class CreateExperienceDto implements WithoutId<Experience> {
-  @ApiProperty()
+  @ApiProperty({ example: 'Summer Festival' })
   @IsString()
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'A festival for the summer' })
   @IsString()
   description: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '2023-06-01T00:00:00.000Z' })
   @IsDateString()
   @IsNotEmpty()
   startDate: Date;
 
-  @ApiProperty()
+  @ApiProperty({ example: '2023-06-10T00:00:00.000Z' })
   @IsDateString()
   @IsNotEmpty()
   endDate: Date;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'https://www.example.com/image.png' })
   @IsString()
   bannerImage: string;
 
@@ -36,49 +36,49 @@ export class CreateExperienceDto implements WithoutId<Experience> {
 }
 
 export class UpdateExperienceDto implements Partial<WithoutId<Experience>> {
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ example: 'Summer Festival' })
   @IsString()
   @IsNotEmpty()
   @IsOptional()
   name: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ example: 'A festival for the summer' })
   @IsString()
   @IsOptional()
   description: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ example: '2023-06-01T00:00:00.000Z' })
   @IsDateString()
   @IsNotEmpty()
   @IsOptional()
   startDate: Date;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ example: '2023-06-10T00:00:00.000Z' })
   @IsDateString()
   @IsNotEmpty()
   @IsOptional()
   endDate: Date;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ example: 'https://www.example.com/image.png' })
   @IsString()
   @IsOptional()
   bannerImage: string;
 }
 
 export class ExperienceDto implements Experience {
-  @ApiProperty()
+  @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   id: string;
-  @ApiProperty()
+  @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   merchantId: string;
-  @ApiProperty()
+  @ApiProperty({ example: 'Summer Festival' })
   name: string;
-  @ApiProperty()
+  @ApiProperty({ example: 'A festival for the summer' })
   description: string;
-  @ApiProperty()
+  @ApiProperty({ example: '2023-06-01T00:00:00.000Z' })
   startDate: Date;
-  @ApiProperty()
+  @ApiProperty({ example: '2023-06-10T00:00:00.000Z' })
   endDate: Date;
-  @ApiProperty()
+  @ApiProperty({ example: 'https://www.example.com/image.png' })
   bannerImage: string;
 }
 

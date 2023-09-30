@@ -4,50 +4,50 @@ import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { TicketDto } from './ticket.dto';
 
 export class CartItemDto implements CartItem {
-  @ApiProperty()
+  @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   id: string;
-  @ApiProperty()
+  @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   cartId: string;
-  @ApiProperty()
+  @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   ticketId: string;
   @ApiProperty()
   ticket: TicketDto;
 }
 
 export class CartDto implements Cart {
-  @ApiProperty()
+  @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   id: string;
-  @ApiProperty()
+  @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   customerId: string;
   @ApiProperty({ type: [CartItemDto] })
   items: CartItemDto[];
 }
 
 export class AddToCartDto {
-  @ApiProperty()
+  @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   @IsString()
   @IsNotEmpty()
   userId: string;
-  @ApiProperty()
+  @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   @IsString()
   @IsNotEmpty()
   ticketId: string;
-  @ApiProperty()
+  @ApiProperty({ example: 1 })
   @IsNumber()
   @IsNotEmpty()
   quantity: number;
 }
 
 export class RemoveFromCartDto {
-  @ApiProperty()
+  @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   @IsString()
   @IsNotEmpty()
   userId: string;
-  @ApiProperty()
+  @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   @IsString()
   @IsNotEmpty()
   ticketId: string;
-  @ApiProperty()
+  @ApiProperty({ example: 1 })
   @IsNumber()
   @IsNotEmpty()
   quantity: number;

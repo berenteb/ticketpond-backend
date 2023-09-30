@@ -5,26 +5,26 @@ import { WithoutId } from '../common.types';
 import { ExperienceDto } from './experience.dto';
 
 export class CreateTicketDto implements WithoutId<Ticket> {
-  @ApiProperty()
+  @ApiProperty({ example: 'One day ticket' })
   @IsString()
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'This ticket is valid for one day' })
   @IsString()
   description: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 123.0 })
   @IsDecimal()
   @IsNotEmpty()
   price: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: '2023-06-01T00:00:00.000Z' })
   @IsDate()
   @IsNotEmpty()
   validFrom: Date;
 
-  @ApiProperty()
+  @ApiProperty({ example: '2023-06-02T00:00:00.000Z' })
   @IsDate()
   @IsNotEmpty()
   validTo: Date;
@@ -36,30 +36,30 @@ export class CreateTicketDto implements WithoutId<Ticket> {
 }
 
 export class UpdateTicketDto implements Partial<WithoutId<Ticket>> {
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ example: 'One day ticket' })
   @IsString()
   @IsNotEmpty()
   @IsOptional()
   name: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ example: 'This ticket is valid for one day' })
   @IsString()
   @IsOptional()
   description: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ example: 123.0 })
   @IsDecimal()
   @IsNotEmpty()
   @IsOptional()
   price: number;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ example: '2023-06-01T00:00:00.000Z' })
   @IsDate()
   @IsNotEmpty()
   @IsOptional()
   validFrom: Date;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ example: '2023-06-02T00:00:00.000Z' })
   @IsDate()
   @IsNotEmpty()
   @IsOptional()
@@ -67,19 +67,19 @@ export class UpdateTicketDto implements Partial<WithoutId<Ticket>> {
 }
 
 export class TicketDto implements Ticket {
-  @ApiProperty()
+  @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   id: string;
-  @ApiProperty()
+  @ApiProperty({ example: 'One day ticket' })
   name: string;
-  @ApiProperty()
+  @ApiProperty({ example: 'This ticket is valid for one day' })
   description: string;
-  @ApiProperty()
+  @ApiProperty({ example: 123.0 })
   price: number;
-  @ApiProperty()
+  @ApiProperty({ example: '2023-06-01T00:00:00.000Z' })
   validFrom: Date;
-  @ApiProperty()
+  @ApiProperty({ example: '2023-06-02T00:00:00.000Z' })
   validTo: Date;
-  @ApiProperty()
+  @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   experienceId: string;
 }
 
