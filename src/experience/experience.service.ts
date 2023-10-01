@@ -10,7 +10,7 @@ export class ExperienceService implements ExperienceServiceInterface {
 
   async createExperience(experience: CreateExperienceDto): Promise<Experience> {
     const created = await this.prismaService.experience.create({ data: experience });
-    Logger.debug(`Created experience with id ${created.id}`);
+    Logger.debug(`Created experience with id ${created.id}`, ExperienceService.name);
     return created;
   }
 
@@ -22,24 +22,24 @@ export class ExperienceService implements ExperienceServiceInterface {
     if (!experience) {
       throw new NotFoundException(`Experience with id ${id} not found`);
     }
-    Logger.debug(`Found experience with id ${id}`);
+    Logger.debug(`Found experience with id ${id}`, ExperienceService.name);
     return experience;
   }
 
   async getExperiences(): Promise<Experience[]> {
     const experiences = await this.prismaService.experience.findMany();
-    Logger.debug(`Found ${experiences.length} experiences`);
+    Logger.debug(`Found ${experiences.length} experiences`, ExperienceService.name);
     return experiences;
   }
 
   async updateExperience(id: string, experience: UpdateExperienceDto): Promise<Experience> {
     const updatedExperience = await this.prismaService.experience.update({ where: { id }, data: experience });
-    Logger.debug(`Updated experience with id ${id}`);
+    Logger.debug(`Updated experience with id ${id}`, ExperienceService.name);
     return updatedExperience;
   }
 
   async deleteExperience(id: string): Promise<void> {
     await this.prismaService.experience.delete({ where: { id } });
-    Logger.debug(`Deleted experience with id ${id}`);
+    Logger.debug(`Deleted experience with id ${id}`, ExperienceService.name);
   }
 }

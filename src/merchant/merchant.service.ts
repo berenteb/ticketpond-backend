@@ -10,7 +10,7 @@ export class MerchantService implements MerchantServiceInterface {
 
   async createMerchant(merchant: CreateMerchantDto): Promise<Merchant> {
     const created = await this.prisma.merchant.create({ data: merchant });
-    Logger.debug(`Created merchant with id ${created.id}`);
+    Logger.debug(`Created merchant with id ${created.id}`, MerchantService.name);
     return created;
   }
 
@@ -19,24 +19,24 @@ export class MerchantService implements MerchantServiceInterface {
     if (!merchant) {
       throw new NotFoundException(`Merchant with id ${id} not found`);
     }
-    Logger.debug(`Found merchant with id ${id}`);
+    Logger.debug(`Found merchant with id ${id}`, MerchantService.name);
     return merchant;
   }
 
   async getMerchants(): Promise<Merchant[]> {
     const merchants = await this.prisma.merchant.findMany();
-    Logger.debug(`Found ${merchants.length} merchants`);
+    Logger.debug(`Found ${merchants.length} merchants`, MerchantService.name);
     return merchants;
   }
 
   async updateMerchant(id: string, merchant: UpdateMerchantDto): Promise<Merchant> {
     const updated = await this.prisma.merchant.update({ where: { id }, data: merchant });
-    Logger.debug(`Updated merchant with id ${id}`);
+    Logger.debug(`Updated merchant with id ${id}`, MerchantService.name);
     return updated;
   }
 
   async deleteMerchant(id: string): Promise<void> {
     await this.prisma.merchant.delete({ where: { id } });
-    Logger.debug(`Deleted merchant with id ${id}`);
+    Logger.debug(`Deleted merchant with id ${id}`, MerchantService.name);
   }
 }

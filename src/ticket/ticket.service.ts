@@ -9,7 +9,7 @@ export class TicketService implements TicketServiceInterface {
 
   async createTicket(ticket: CreateTicketDto): Promise<TicketDto> {
     const created = await this.prismaService.ticket.create({ data: ticket });
-    Logger.debug(`Created ticket with id ${created.id}`);
+    Logger.debug(`Created ticket with id ${created.id}`, TicketService.name);
     return created;
   }
 
@@ -18,29 +18,30 @@ export class TicketService implements TicketServiceInterface {
     if (!ticket) {
       throw new NotFoundException(`Ticket with id ${id} not found`);
     }
+    Logger.debug(`Found ticket with id ${id}`, TicketService.name);
     return ticket;
   }
 
   async getTicketsForExperience(experienceId: string): Promise<TicketDto[]> {
     const tickets = await this.prismaService.ticket.findMany({ where: { experienceId } });
-    Logger.debug(`Found ${tickets.length} tickets for experience ${experienceId}`);
+    Logger.debug(`Found ${tickets.length} tickets for experience ${experienceId}`, TicketService.name);
     return tickets;
   }
 
   async getTickets(): Promise<TicketDto[]> {
     const tickets = await this.prismaService.ticket.findMany();
-    Logger.debug(`Found ${tickets.length} tickets`);
+    Logger.debug(`Found ${tickets.length} tickets`, TicketService.name);
     return tickets;
   }
 
   async updateTicket(id: string, ticket: UpdateTicketDto): Promise<TicketDto> {
     const updated = await this.prismaService.ticket.update({ where: { id }, data: ticket });
-    Logger.debug(`Updated ticket with id ${id}`);
+    Logger.debug(`Updated ticket with id ${id}`, TicketService.name);
     return updated;
   }
 
   async deleteTicket(id: string): Promise<void> {
     await this.prismaService.ticket.delete({ where: { id } });
-    Logger.debug(`Deleted ticket with id ${id}`);
+    Logger.debug(`Deleted ticket with id ${id}`, TicketService.name);
   }
 }

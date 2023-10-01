@@ -13,7 +13,7 @@ export class CartService implements CartServiceInterface {
       data: { customerId },
       include: { items: { include: { ticket: { include: { experience: true } } } } },
     });
-    Logger.debug(`Created cart for customer ${customerId} with id ${cart.id}`);
+    Logger.debug(`Created cart for customer ${customerId} with id ${cart.id}`, CartService.name);
     return cart;
   }
 
@@ -25,7 +25,7 @@ export class CartService implements CartServiceInterface {
     if (!cart) {
       throw new NotFoundException(`Cart with id ${id} not found`);
     }
-    Logger.debug(`Found cart with id ${id}`);
+    Logger.debug(`Found cart with id ${id}`, CartService.name);
     return cart;
   }
 
@@ -35,11 +35,11 @@ export class CartService implements CartServiceInterface {
       include: { items: { include: { ticket: { include: { experience: true } } } } },
     });
     if (cart) {
-      Logger.debug(`Found cart for customer ${customerId}`);
+      Logger.debug(`Found cart for customer ${customerId}`, CartService.name);
       return cart;
     } else {
       const created = await this.createCartForCustomer(customerId);
-      Logger.debug(`Created cart for customer ${customerId} with id ${created.id}`);
+      Logger.debug(`Created cart for customer ${customerId} with id ${created.id}`, CartService.name);
       return created;
     }
   }
@@ -48,7 +48,7 @@ export class CartService implements CartServiceInterface {
     for (let i = 0; i < quantity; i++) {
       await this.prismaService.cartItem.create({ data: { cartId, ticketId } });
     }
-    Logger.debug(`Added ${quantity} items of ${ticketId} to cart ${cartId}`);
+    Logger.debug(`Added ${quantity} items of ${ticketId} to cart ${cartId}`, CartService.name);
     return this.getCartById(cartId);
   }
 
@@ -60,24 +60,24 @@ export class CartService implements CartServiceInterface {
       }
       await this.prismaService.cartItem.delete({ where: { id: deleteCandidate.id } });
     }
-    Logger.debug(`Removed ${quantity} items of ${ticketId} from cart ${cartId}`);
+    Logger.debug(`Removed ${quantity} items of ${ticketId} from cart ${cartId}`, CartService.name);
     return this.getCartById(cartId);
   }
 
   async checkout(cartId: string): Promise<void> {
     const cart = await this.getCartById(cartId);
-    Logger.debug(`Checking out cart ${cartId}`);
+    Logger.debug(`Checking out cart ${cartId}`, CartService.name);
     await this.orderService.createOrder(cart);
     await this.deleteCart(cartId);
   }
 
   async deleteCart(cartId: string): Promise<void> {
     await this.prismaService.cart.delete({ where: { id: cartId } });
-    Logger.debug(`Deleted cart ${cartId}`);
+    Logger.debug(`Deleted cart ${cartId}`, CartService.name);
   }
 
   async deleteCartForCustomer(customerId: string): Promise<void> {
     await this.prismaService.cart.delete({ where: { customerId } });
-    Logger.debug(`Deleted cart for customer ${customerId}`);
+    Logger.debug(`Deleted cart for customer ${customerId}`, CartService.name);
   }
 }

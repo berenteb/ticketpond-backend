@@ -17,7 +17,7 @@ export class OrderService implements OrderServiceInterface {
     if (!order) {
       throw new NotFoundException(`Order with id ${id} not found`);
     }
-    Logger.debug(`Found order with id ${id}`);
+    Logger.debug(`Found order with id ${id}`, OrderService.name);
     return order;
   }
 
@@ -25,7 +25,7 @@ export class OrderService implements OrderServiceInterface {
     const orders = await this.prisma.order.findMany({
       include: { items: { include: { ticket: { include: { experience: true } } } } },
     });
-    Logger.debug(`Found ${orders.length} orders`);
+    Logger.debug(`Found ${orders.length} orders`, OrderService.name);
     return orders;
   }
 
@@ -34,14 +34,14 @@ export class OrderService implements OrderServiceInterface {
       where: { customerId },
       include: { items: { include: { ticket: { include: { experience: true } } } } },
     });
-    Logger.debug(`Found ${order.length} orders for customer with id ${customerId}`);
+    Logger.debug(`Found ${order.length} orders for customer with id ${customerId}`, OrderService.name);
     return order;
   }
 
   async deleteOrder(id: string): Promise<void> {
     await this.prisma.order.delete({ where: { id } });
     await this.prisma.orderItem.deleteMany({ where: { orderId: id } });
-    Logger.debug(`Deleted order with id ${id}`);
+    Logger.debug(`Deleted order with id ${id}`, OrderService.name);
   }
 
   async createOrder(cart: CartDto): Promise<OrderDto> {
@@ -59,7 +59,7 @@ export class OrderService implements OrderServiceInterface {
       },
       include: { items: { include: { ticket: { include: { experience: true } } } } },
     });
-    Logger.debug(`Created order with id ${created.id}`);
+    Logger.debug(`Created order with id ${created.id}`, OrderService.name);
     return created;
   }
 }
