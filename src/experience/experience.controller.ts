@@ -13,7 +13,7 @@ export class ExperienceController {
   constructor(private readonly experienceService: ExperienceServiceInterface) {}
 
   @Get()
-  @ApiOkResponse({ type: ExperienceDto })
+  @ApiOkResponse({ type: [ExperienceDto] })
   async getExperiences(): Promise<ExperienceDto[]> {
     return this.experienceService.getExperiences();
   }
