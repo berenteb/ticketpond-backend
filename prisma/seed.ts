@@ -15,7 +15,7 @@ const MockExperience = {
   description: 'A festival for the summer',
   startDate: '2023-06-01T00:00:00.000Z',
   endDate: '2023-06-10T00:00:00.000Z',
-  bannerImage: 'https://www.example.com/image.png',
+  bannerImage: 'https://images.unsplash.com/photo-1506157786151-b8491531f063',
   merchantId: 'd920bc96-e5e6-4dd5-9826-4a1961c79866',
 };
 
