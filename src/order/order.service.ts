@@ -1,15 +1,15 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CartDto } from '../types/dtos/cart.dto';
-import { OrderDto } from '../types/dtos/order.dto';
+import { DeepOrderDto, OrderDto } from '../types/dtos/order.dto';
 import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
-import { generateSerialNumber } from '../util/serialNumber.util';
+import { generateDateBasedSerialNumber, generateSerialNumber } from '../util/serialNumber.util';
 
 @Injectable()
 export class OrderService implements OrderServiceInterface {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getOrderById(id: string): Promise<OrderDto> {
+  async getOrderById(id: string): Promise<DeepOrderDto> {
     const order = await this.prisma.order.findUnique({
       where: { id },
       include: { items: { include: { ticket: { include: { experience: true } } } } },
@@ -30,6 +30,7 @@ export class OrderService implements OrderServiceInterface {
   }
 
   async getOrdersForCustomer(customerId: string): Promise<OrderDto[]> {
+    console.log(customerId);
     const order = await this.prisma.order.findMany({
       where: { customerId },
       include: { items: { include: { ticket: { include: { experience: true } } } } },
@@ -44,11 +45,12 @@ export class OrderService implements OrderServiceInterface {
     Logger.debug(`Deleted order with id ${id}`, OrderService.name);
   }
 
-  async createOrder(cart: CartDto): Promise<OrderDto> {
+  async createOrder(cart: CartDto): Promise<DeepOrderDto> {
     const { customerId, items } = cart;
     const created = await this.prisma.order.create({
       data: {
         customerId,
+        serialNumber: generateDateBasedSerialNumber(),
         items: {
           create: items.map((item) => ({
             ticketId: item.ticket.id,

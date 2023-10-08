@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { $Enums, Order, OrderItem } from '@prisma/client';
+import { DeepTicketDto } from './deep-ticket.dto';
 
 export class OrderItemDto implements OrderItem {
   @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
@@ -14,6 +15,11 @@ export class OrderItemDto implements OrderItem {
   ticketId: string;
 }
 
+export class DeepOrderItemDto extends OrderItemDto {
+  @ApiProperty()
+  ticket: DeepTicketDto;
+}
+
 export class OrderDto implements Order {
   @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   id: string;
@@ -24,7 +30,14 @@ export class OrderDto implements Order {
   @ApiProperty({ type: [OrderItemDto] })
   items: OrderItemDto[];
   @ApiProperty({ example: $Enums.PaymentStatus.UNPAID })
-  paymentStatus: $Enums.PaymentStatus;
+  paymentStatus: 'UNPAID' | 'FAIL' | 'SUCCESS';
   @ApiProperty({ example: $Enums.OrderStatus.PENDING })
-  orderStatus: $Enums.OrderStatus;
+  orderStatus: 'PENDING' | 'PAID' | 'CANCELLED';
+  @ApiProperty({ example: '2023.01.01.123456' })
+  serialNumber: string;
+}
+
+export class DeepOrderDto extends OrderDto {
+  @ApiProperty({ type: [DeepOrderItemDto] })
+  items: DeepOrderItemDto[];
 }

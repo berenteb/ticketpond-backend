@@ -74,11 +74,13 @@ export class CartService implements CartServiceInterface {
     return this.getCartById(cartId);
   }
 
-  async checkout(cartId: string): Promise<void> {
+  async checkout(cartId: string): Promise<string> {
     const cart = await this.getCartById(cartId);
     Logger.debug(`Checking out cart ${cartId}`, CartService.name);
-    await this.orderService.createOrder(cart);
+    const order = await this.orderService.createOrder(cart);
     await this.deleteCart(cartId);
+    Logger.debug(`Checked out cart ${cartId} to order ${order.id}`, CartService.name);
+    return order.id;
   }
 
   async deleteCart(cartId: string): Promise<void> {

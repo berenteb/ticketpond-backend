@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiNotFoundResponse, ApiOkResponse } from '@nestjs/swagger';
 import { ReqWithUser } from '../types/common.types';
@@ -23,10 +23,22 @@ export class CartController {
     return this.cartService.getCartForCustomer(id);
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Post('me/checkout')
+  @ApiOkResponse({ type: String })
+  async checkoutForMe(@Req() req: ReqWithUser): Promise<string> {
+    const cart = await this.cartService.getCartForCustomer(req.user.sub);
+    if (cart.items.length === 0) {
+      throw new BadRequestException('Cart is empty');
+    }
+    const orderId = await this.cartService.checkout(cart.id);
+    return '/profile/orders/' + orderId;
+  }
+
   @Post(':id/checkout')
   @ApiOkResponse()
   async checkout(@Param('id') id: string): Promise<void> {
-    return this.cartService.checkout(id);
+    await this.cartService.checkout(id);
   }
 
   @UseGuards(AuthGuard('jwt'))

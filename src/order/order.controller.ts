@@ -1,6 +1,8 @@
-import { Controller, Delete, Get, Param } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Req, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiNotFoundResponse, ApiOkResponse } from '@nestjs/swagger';
-import { OrderDto } from '../types/dtos/order.dto';
+import { ReqWithUser } from '../types/common.types';
+import { DeepOrderDto, OrderDto } from '../types/dtos/order.dto';
 import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
 
 @Controller('order')
@@ -13,17 +15,19 @@ export class OrderController {
     return await this.orderService.getOrders();
   }
 
-  @Get(':id')
-  @ApiOkResponse({ type: OrderDto })
-  @ApiNotFoundResponse()
-  async getOrder(@Param('id') id: string): Promise<OrderDto> {
-    return await this.orderService.getOrderById(id);
+  @UseGuards(AuthGuard('jwt'))
+  @Get('me')
+  @ApiOkResponse({ type: [OrderDto] })
+  async getOrdersByUser(@Req() req: ReqWithUser): Promise<OrderDto[]> {
+    return await this.orderService.getOrdersForCustomer(req.user.sub);
   }
 
-  @Get('user/:id')
-  @ApiOkResponse({ type: [OrderDto] })
-  async getOrdersByUser(@Param('id') id: string): Promise<OrderDto[]> {
-    return await this.orderService.getOrdersForCustomer(id);
+  @UseGuards(AuthGuard('jwt'))
+  @Get(':id')
+  @ApiOkResponse({ type: DeepOrderDto })
+  @ApiNotFoundResponse()
+  async getOrder(@Param('id') id: string): Promise<DeepOrderDto> {
+    return await this.orderService.getOrderById(id);
   }
 
   @Delete(':id')

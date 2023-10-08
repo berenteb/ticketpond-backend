@@ -16,5 +16,5 @@ export abstract class CartServiceInterface {
   abstract deleteCart(cartId: string): Promise<void>;
 
   abstract deleteCartForCustomer(customerId: string): Promise<void>;
-  abstract checkout(cartId: string): Promise<void>;
+  abstract checkout(cartId: string): Promise<string>;
 }
