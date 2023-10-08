@@ -2,7 +2,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Ticket } from '@prisma/client';
 import { IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { WithoutId } from '../common.types';
-import { ExperienceDto } from './experience.dto';
 
 export class CreateTicketDto implements WithoutId<Ticket> {
   @ApiProperty({ example: 'One day ticket' })
@@ -81,8 +80,4 @@ export class TicketDto implements Ticket {
   validTo: Date;
   @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   experienceId: string;
-}
-
-export class DeepTicketDto extends TicketDto {
-  experience: ExperienceDto;
 }

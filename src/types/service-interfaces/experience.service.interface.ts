@@ -1,4 +1,5 @@
-import { CreateExperienceDto, DeepExperienceDto, ExperienceDto, UpdateExperienceDto } from '../dtos/experience.dto';
+import { DeepExperienceDto } from '../dtos/deep-experience.dto';
+import { CreateExperienceDto, ExperienceDto, UpdateExperienceDto } from '../dtos/experience.dto';
 
 export abstract class ExperienceServiceInterface {
   abstract getExperiences(): Promise<ExperienceDto[]>;

@@ -2,8 +2,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Experience } from '@prisma/client';
 import { IsDateString, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { WithoutId } from '../common.types';
-import { MerchantDto } from './merchant.dto';
-import { TicketDto } from './ticket.dto';
 
 export class CreateExperienceDto implements WithoutId<Experience> {
   @ApiProperty({ example: 'Summer Festival' })
@@ -80,11 +78,4 @@ export class ExperienceDto implements Experience {
   endDate: Date;
   @ApiProperty({ example: 'https://www.example.com/image.png' })
   bannerImage: string;
-}
-
-export class DeepExperienceDto extends ExperienceDto {
-  @ApiProperty()
-  merchant: MerchantDto;
-  @ApiProperty({ type: [TicketDto] })
-  tickets: TicketDto[];
 }

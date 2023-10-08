@@ -1,6 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateTicketDto, DeepTicketDto, TicketDto, UpdateTicketDto } from '../types/dtos/ticket.dto';
+import { DeepTicketDto } from '../types/dtos/deep-ticket.dto';
+import { CreateTicketDto, TicketDto, UpdateTicketDto } from '../types/dtos/ticket.dto';
 import { TicketServiceInterface } from '../types/service-interfaces/ticket.service.interface';
 
 @Injectable()

@@ -1,7 +1,8 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Experience } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateExperienceDto, DeepExperienceDto, UpdateExperienceDto } from '../types/dtos/experience.dto';
+import { DeepExperienceDto } from '../types/dtos/deep-experience.dto';
+import { CreateExperienceDto, UpdateExperienceDto } from '../types/dtos/experience.dto';
 import { ExperienceServiceInterface } from '../types/service-interfaces/experience.service.interface';
 
 @Injectable()

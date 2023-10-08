@@ -1,4 +1,5 @@
-import { CreateTicketDto, DeepTicketDto, TicketDto, UpdateTicketDto } from '../dtos/ticket.dto';
+import { DeepTicketDto } from '../dtos/deep-ticket.dto';
+import { CreateTicketDto, TicketDto, UpdateTicketDto } from '../dtos/ticket.dto';
 
 export abstract class TicketServiceInterface {
   abstract getTickets(): Promise<TicketDto[]>;

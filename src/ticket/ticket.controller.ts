@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiOkResponse } from '@nestjs/swagger';
-import { CreateTicketDto, DeepTicketDto, TicketDto, UpdateTicketDto } from '../types/dtos/ticket.dto';
+import { DeepTicketDto } from '../types/dtos/deep-ticket.dto';
+import { CreateTicketDto, TicketDto, UpdateTicketDto } from '../types/dtos/ticket.dto';
 import { TicketServiceInterface } from '../types/service-interfaces/ticket.service.interface';
 
 @Controller('ticket')

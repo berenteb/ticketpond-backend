@@ -1,11 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiNotFoundResponse, ApiOkResponse } from '@nestjs/swagger';
-import {
-  CreateExperienceDto,
-  DeepExperienceDto,
-  ExperienceDto,
-  UpdateExperienceDto,
-} from '../types/dtos/experience.dto';
+import { DeepExperienceDto } from '../types/dtos/deep-experience.dto';
+import { CreateExperienceDto, ExperienceDto, UpdateExperienceDto } from '../types/dtos/experience.dto';
 import { ExperienceServiceInterface } from '../types/service-interfaces/experience.service.interface';
 
 @Controller('experience')

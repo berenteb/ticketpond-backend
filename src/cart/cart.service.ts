@@ -44,12 +44,22 @@ export class CartService implements CartServiceInterface {
     }
   }
 
+  async addItemToCartForCustomer(customerId: string, ticketId: string, quantity: number): Promise<CartDto> {
+    const cart = await this.getCartForCustomer(customerId);
+    return this.addItemToCart(cart.id, ticketId, quantity);
+  }
+
   async addItemToCart(cartId: string, ticketId: string, quantity: number): Promise<CartDto> {
     for (let i = 0; i < quantity; i++) {
       await this.prismaService.cartItem.create({ data: { cartId, ticketId } });
     }
     Logger.debug(`Added ${quantity} items of ${ticketId} to cart ${cartId}`, CartService.name);
     return this.getCartById(cartId);
+  }
+
+  async removeItemFromCartForCustomer(customerId: string, ticketId: string, quantity: number): Promise<CartDto> {
+    const cart = await this.getCartForCustomer(customerId);
+    return this.removeItemFromCart(cart.id, ticketId, quantity);
   }
 
   async removeItemFromCart(cartId: string, ticketId: string, quantity: number): Promise<CartDto> {

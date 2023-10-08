@@ -8,8 +8,11 @@ export abstract class CartServiceInterface {
   abstract createCartForCustomer(customerId: string): Promise<CartDto>;
 
   abstract addItemToCart(cartId: string, ticketId: string, quantity: number): Promise<CartDto>;
+  abstract addItemToCartForCustomer(customerId: string, ticketId: string, quantity: number): Promise<CartDto>;
 
   abstract removeItemFromCart(cartId: string, ticketId: string, quantity: number): Promise<CartDto>;
+  abstract removeItemFromCartForCustomer(customerId: string, ticketId: string, quantity: number): Promise<CartDto>;
+
   abstract deleteCart(cartId: string): Promise<void>;
 
   abstract deleteCartForCustomer(customerId: string): Promise<void>;
