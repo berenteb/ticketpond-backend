@@ -9,8 +9,9 @@ export class CustomerService extends CustomerServiceInterface {
   constructor(private readonly prismaService: PrismaService) {
     super();
   }
-  async createCustomer(customer: CreateCustomerDto): Promise<Customer> {
-    const created = await this.prismaService.customer.create({ data: customer });
+
+  async createCustomer(customer: CreateCustomerDto, id?: string): Promise<Customer> {
+    const created = await this.prismaService.customer.create({ data: { ...customer, id } });
     Logger.debug(`Created customer with id ${created.id}`, CustomerService.name);
     return created;
   }

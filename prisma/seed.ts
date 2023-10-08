@@ -27,14 +27,6 @@ const MockTicket = {
   validTo: '2023-06-02T00:00:00.000Z',
 };
 
-const MockCustomer = {
-  firstName: 'John',
-  lastName: 'Doe',
-  email: 'john.doe@example.com',
-  address: '123 Main St, New York, NY 10030',
-  phone: '+1234567890',
-};
-
 async function main() {
   const merchant = await client.merchant.create({
     data: MockMerchant,
@@ -51,15 +43,10 @@ async function main() {
     },
   });
 
-  const customer = await client.customer.create({
-    data: MockCustomer,
-  });
-
   return {
     merchant,
     experience,
     ticket,
-    customer,
   };
 }
 

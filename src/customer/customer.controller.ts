@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiNotFoundResponse, ApiOkResponse } from '@nestjs/swagger';
 import { CreateCustomerDto, CustomerDto, UpdateCustomerDto } from '../types/dtos/customer.dto';
 import { CustomerServiceInterface } from '../types/service-interfaces/customer.service.interface';
@@ -13,6 +25,13 @@ export class CustomerController {
     return this.customerService.getCustomers();
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Get('me')
+  @ApiOkResponse({ type: CustomerDto })
+  async getMe(@Req() req: any): Promise<CustomerDto> {
+    return await this.customerService.getCustomerById(req.user.sub);
+  }
+
   @Get(':id')
   @ApiOkResponse({ type: CustomerDto })
   @ApiNotFoundResponse()
@@ -24,6 +43,15 @@ export class CustomerController {
   @ApiOkResponse({ type: CustomerDto })
   async createCustomer(@Body() customer: CreateCustomerDto): Promise<CustomerDto> {
     return this.customerService.createCustomer(customer);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('register')
+  @ApiOkResponse({ type: CustomerDto })
+  async registerCustomer(@Body() customer: CreateCustomerDto, @Req() req: any): Promise<CustomerDto> {
+    const id = req.user.sub;
+    if (!id) throw new UnauthorizedException();
+    return this.customerService.createCustomer(customer, id);
   }
 
   @Patch(':id')
