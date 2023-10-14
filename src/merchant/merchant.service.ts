@@ -8,8 +8,8 @@ import { MerchantServiceInterface } from '../types/service-interfaces/merchant.s
 export class MerchantService implements MerchantServiceInterface {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createMerchant(merchant: CreateMerchantDto): Promise<Merchant> {
-    const created = await this.prisma.merchant.create({ data: merchant });
+  async createMerchant(merchant: CreateMerchantDto, id?: string): Promise<Merchant> {
+    const created = await this.prisma.merchant.create({ data: { ...merchant, id } });
     Logger.debug(`Created merchant with id ${created.id}`, MerchantService.name);
     return created;
   }

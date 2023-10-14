@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiNotFoundResponse, ApiOkResponse } from '@nestjs/swagger';
+import { ReqWithUser } from '../types/common.types';
 import { CreateCustomerDto, CustomerDto, UpdateCustomerDto } from '../types/dtos/customer.dto';
 import { CustomerServiceInterface } from '../types/service-interfaces/customer.service.interface';
 
@@ -48,7 +49,7 @@ export class CustomerController {
   @UseGuards(AuthGuard('jwt'))
   @Post('register')
   @ApiOkResponse({ type: CustomerDto })
-  async registerCustomer(@Body() customer: CreateCustomerDto, @Req() req: any): Promise<CustomerDto> {
+  async registerCustomer(@Body() customer: CreateCustomerDto, @Req() req: ReqWithUser): Promise<CustomerDto> {
     const id = req.user.sub;
     if (!id) throw new UnauthorizedException();
     return this.customerService.createCustomer(customer, id);

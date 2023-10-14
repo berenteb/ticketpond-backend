@@ -1,5 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiOkResponse } from '@nestjs/swagger';
+import { ReqWithUser } from '../types/common.types';
 import { CreateMerchantDto, MerchantDto, UpdateMerchantDto } from '../types/dtos/merchant.dto';
 import { MerchantServiceInterface } from '../types/service-interfaces/merchant.service.interface';
 
@@ -13,6 +26,13 @@ export class MerchantController {
     return this.merchantService.getMerchants();
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Get('me')
+  @ApiOkResponse({ type: MerchantDto })
+  async getMe(@Req() req: ReqWithUser): Promise<MerchantDto> {
+    return await this.merchantService.getMerchantById(req.user.sub);
+  }
+
   @Get(':id')
   @ApiOkResponse({ type: MerchantDto })
   async getMerchant(@Param('id') id: string): Promise<MerchantDto> {
@@ -23,6 +43,15 @@ export class MerchantController {
   @ApiOkResponse({ type: MerchantDto })
   async createMerchant(@Body() merchant: CreateMerchantDto): Promise<MerchantDto> {
     return this.merchantService.createMerchant(merchant);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('register')
+  @ApiOkResponse({ type: MerchantDto })
+  async registerMerchant(@Body() merchant: CreateMerchantDto, @Req() req: ReqWithUser): Promise<MerchantDto> {
+    const id = req.user.sub;
+    if (!id) throw new UnauthorizedException();
+    return this.merchantService.createMerchant(merchant, id);
   }
 
   @Patch(':id')
