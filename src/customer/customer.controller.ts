@@ -21,7 +21,7 @@ export class CustomerController {
   constructor(private readonly customerService: CustomerServiceInterface) {}
 
   @Get()
-  @ApiOkResponse({ type: CustomerDto })
+  @ApiOkResponse({ type: [CustomerDto] })
   async getCustomers(): Promise<CustomerDto[]> {
     return this.customerService.getCustomers();
   }
