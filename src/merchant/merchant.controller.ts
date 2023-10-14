@@ -30,7 +30,7 @@ export class MerchantController {
   @Get('me')
   @ApiOkResponse({ type: MerchantDto })
   async getMe(@Req() req: ReqWithUser): Promise<MerchantDto> {
-    return await this.merchantService.getMerchantById(req.user.sub);
+    return await this.merchantService.getMerchantByUserId(req.user.sub);
   }
 
   @Get(':id')
@@ -49,9 +49,11 @@ export class MerchantController {
   @Post('register')
   @ApiOkResponse({ type: MerchantDto })
   async registerMerchant(@Body() merchant: CreateMerchantDto, @Req() req: ReqWithUser): Promise<MerchantDto> {
-    const id = req.user.sub;
-    if (!id) throw new UnauthorizedException();
-    return this.merchantService.createMerchant(merchant, id);
+    const userId = req.user.sub;
+    if (!userId) throw new UnauthorizedException();
+    const createdMerchant = await this.merchantService.createMerchant(merchant);
+    await this.merchantService.assignCustomerToMerchant(createdMerchant.id, userId);
+    return createdMerchant;
   }
 
   @Patch(':id')
