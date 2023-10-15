@@ -29,8 +29,8 @@ export class TicketService implements TicketServiceInterface {
     return tickets;
   }
 
-  async getTickets(): Promise<TicketDto[]> {
-    const tickets = await this.prismaService.ticket.findMany();
+  async getTickets(): Promise<DeepTicketDto[]> {
+    const tickets = await this.prismaService.ticket.findMany({ include: { experience: true } });
     Logger.debug(`Found ${tickets.length} tickets`, TicketService.name);
     return tickets;
   }
@@ -44,5 +44,14 @@ export class TicketService implements TicketServiceInterface {
   async deleteTicket(id: string): Promise<void> {
     await this.prismaService.ticket.delete({ where: { id } });
     Logger.debug(`Deleted ticket with id ${id}`, TicketService.name);
+  }
+
+  async getTicketsForMerchant(id: string): Promise<DeepTicketDto[]> {
+    const tickets = await this.prismaService.ticket.findMany({
+      where: { experience: { merchantId: id } },
+      include: { experience: true },
+    });
+    Logger.debug(`Found ${tickets.length} tickets for merchant with id ${id}`, TicketService.name);
+    return tickets;
   }
 }
