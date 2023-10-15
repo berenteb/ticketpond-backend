@@ -30,7 +30,6 @@ export class OrderService implements OrderServiceInterface {
   }
 
   async getOrdersForCustomer(customerId: string): Promise<OrderDto[]> {
-    console.log(customerId);
     const order = await this.prisma.order.findMany({
       where: { customerId },
       include: { items: { include: { ticket: { include: { experience: true } } } } },
