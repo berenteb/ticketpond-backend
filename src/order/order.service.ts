@@ -1,7 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CartDto } from '../types/dtos/cart.dto';
-import { DeepOrderDto, OrderDto } from '../types/dtos/order.dto';
+import { DeepOrderDto, DeepOrderWithCustomerDto, OrderDto, OrderWithCustomerDto } from '../types/dtos/order.dto';
 import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
 import { generateDateBasedSerialNumber, generateSerialNumber } from '../util/serialNumber.util';
 
@@ -21,9 +21,9 @@ export class OrderService implements OrderServiceInterface {
     return order;
   }
 
-  async getOrders(): Promise<OrderDto[]> {
+  async getOrders(): Promise<DeepOrderWithCustomerDto[]> {
     const orders = await this.prisma.order.findMany({
-      include: { items: { include: { ticket: { include: { experience: true } } } } },
+      include: { items: { include: { ticket: { include: { experience: true } } } }, customer: true },
     });
     Logger.debug(`Found ${orders.length} orders`, OrderService.name);
     return orders;
@@ -32,7 +32,7 @@ export class OrderService implements OrderServiceInterface {
   async getOrdersForCustomer(customerId: string): Promise<OrderDto[]> {
     const order = await this.prisma.order.findMany({
       where: { customerId },
-      include: { items: { include: { ticket: { include: { experience: true } } } } },
+      include: { items: true },
     });
     Logger.debug(`Found ${order.length} orders for customer with id ${customerId}`, OrderService.name);
     return order;
@@ -62,5 +62,26 @@ export class OrderService implements OrderServiceInterface {
     });
     Logger.debug(`Created order with id ${created.id}`, OrderService.name);
     return created;
+  }
+
+  async getOrderByIdWithCustomer(id: string): Promise<DeepOrderWithCustomerDto> {
+    const order = await this.prisma.order.findUnique({
+      where: { id },
+      include: { items: { include: { ticket: { include: { experience: true } } } }, customer: true },
+    });
+    if (!order) {
+      throw new NotFoundException(`Order with id ${id} not found`);
+    }
+    Logger.debug(`Found order with id ${id}`, OrderService.name);
+    return order;
+  }
+
+  async getOrdersForMerchant(merchantId: string): Promise<OrderWithCustomerDto[]> {
+    const orders = await this.prisma.order.findMany({
+      where: { items: { some: { ticket: { experience: { merchantId } } } } },
+      include: { items: true, customer: true },
+    });
+    Logger.debug(`Found ${orders.length} orders for merchant with id ${merchantId}`, OrderService.name);
+    return orders;
   }
 }

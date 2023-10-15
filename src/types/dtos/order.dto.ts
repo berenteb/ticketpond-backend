@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { $Enums, Order, OrderItem } from '@prisma/client';
+import { CustomerDto } from './customer.dto';
 import { DeepTicketDto } from './deep-ticket.dto';
 
 export class OrderItemDto implements OrderItem {
@@ -37,7 +38,17 @@ export class OrderDto implements Order {
   serialNumber: string;
 }
 
+export class OrderWithCustomerDto extends OrderDto {
+  @ApiProperty({ type: CustomerDto })
+  customer: CustomerDto;
+}
+
 export class DeepOrderDto extends OrderDto {
   @ApiProperty({ type: [DeepOrderItemDto] })
   items: DeepOrderItemDto[];
+}
+
+export class DeepOrderWithCustomerDto extends DeepOrderDto {
+  @ApiProperty({ type: CustomerDto })
+  customer: CustomerDto;
 }
