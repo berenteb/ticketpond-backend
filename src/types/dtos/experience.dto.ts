@@ -3,7 +3,7 @@ import { Experience } from '@prisma/client';
 import { IsDateString, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { WithoutId } from '../common.types';
 
-export class CreateExperienceDto implements WithoutId<Experience> {
+export class CreateExperienceDto implements Omit<WithoutId<Experience>, 'merchantId'> {
   @ApiProperty({ example: 'Summer Festival' })
   @IsString()
   @IsNotEmpty()
@@ -26,11 +26,6 @@ export class CreateExperienceDto implements WithoutId<Experience> {
   @ApiProperty({ example: 'https://www.example.com/image.png' })
   @IsString()
   bannerImage: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  merchantId: string;
 }
 
 export class UpdateExperienceDto implements Partial<WithoutId<Experience>> {

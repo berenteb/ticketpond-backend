@@ -3,10 +3,11 @@ import { CreateExperienceDto, ExperienceDto, UpdateExperienceDto } from '../dtos
 
 export abstract class ExperienceServiceInterface {
   abstract getExperiences(): Promise<ExperienceDto[]>;
+  abstract getExperiencesByMerchantId(id: string): Promise<ExperienceDto[]>;
 
   abstract getExperienceById(id: string): Promise<DeepExperienceDto>;
 
-  abstract createExperience(experience: CreateExperienceDto): Promise<ExperienceDto>;
+  abstract createExperience(experience: CreateExperienceDto, merchantId: string): Promise<ExperienceDto>;
 
   abstract updateExperience(id: string, experience: UpdateExperienceDto): Promise<ExperienceDto>;
   abstract deleteExperience(id: string): Promise<void>;

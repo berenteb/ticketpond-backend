@@ -9,10 +9,19 @@ import { ExperienceServiceInterface } from '../types/service-interfaces/experien
 export class ExperienceService implements ExperienceServiceInterface {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async createExperience(experience: CreateExperienceDto): Promise<Experience> {
-    const created = await this.prismaService.experience.create({ data: experience });
+  async createExperience(experience: CreateExperienceDto, merchantId: string): Promise<Experience> {
+    const created = await this.prismaService.experience.create({ data: { ...experience, merchantId } });
     Logger.debug(`Created experience with id ${created.id}`, ExperienceService.name);
     return created;
+  }
+
+  async getExperiencesByMerchantId(id: string): Promise<Experience[]> {
+    console.log(id);
+    const experiences = await this.prismaService.experience.findMany({
+      where: { merchantId: id },
+    });
+    Logger.debug(`Found ${experiences.length} experiences for merchant with id ${id}`, ExperienceService.name);
+    return experiences;
   }
 
   async getExperienceById(id: string): Promise<DeepExperienceDto> {
