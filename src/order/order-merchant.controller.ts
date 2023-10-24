@@ -10,7 +10,7 @@ import { OrderServiceInterface } from '../types/service-interfaces/order.service
 
 @UseGuards(PermissionGuard(Permissions.MERCHANT))
 @UseGuards(AuthGuard('jwt'))
-@Controller('merchant/order')
+@Controller('merchant-admin/order')
 export class OrderMerchantController {
   constructor(
     private readonly orderService: OrderServiceInterface,
@@ -19,8 +19,9 @@ export class OrderMerchantController {
 
   @Get()
   @ApiOkResponse({ type: [OrderWithCustomerDto] })
-  async getOrders(): Promise<OrderWithCustomerDto[]> {
-    return await this.orderService.getOrders();
+  async getOrders(@Req() req: ReqWithUser): Promise<OrderWithCustomerDto[]> {
+    const merchant = await this.merchantService.getMerchantByUserId(req.user.sub);
+    return await this.orderService.getOrdersForMerchant(merchant.id);
   }
 
   @Get(':id')

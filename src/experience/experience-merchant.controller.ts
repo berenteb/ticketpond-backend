@@ -21,7 +21,7 @@ import { MerchantServiceInterface } from '../types/service-interfaces/merchant.s
 
 @UseGuards(PermissionGuard(Permissions.MERCHANT))
 @UseGuards(AuthGuard('jwt'))
-@Controller('merchant/experience')
+@Controller('merchant-admin/experience')
 export class ExperienceMerchantController {
   constructor(
     private readonly experienceService: ExperienceServiceInterface,

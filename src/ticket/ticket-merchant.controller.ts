@@ -12,7 +12,7 @@ import { TicketServiceInterface } from '../types/service-interfaces/ticket.servi
 
 @UseGuards(PermissionGuard(Permissions.MERCHANT))
 @UseGuards(AuthGuard('jwt'))
-@Controller('merchant/ticket')
+@Controller('merchant-admin/ticket')
 export class TicketMerchantController {
   constructor(
     private readonly ticketService: TicketServiceInterface,

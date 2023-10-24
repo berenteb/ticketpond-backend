@@ -9,7 +9,7 @@ import { MerchantServiceInterface } from '../types/service-interfaces/merchant.s
 
 @UseGuards(PermissionGuard(Permissions.MERCHANT))
 @UseGuards(AuthGuard('jwt'))
-@Controller('merchant-self/me')
+@Controller('merchant-admin/me')
 export class MerchantSelfController {
   constructor(private readonly merchantService: MerchantServiceInterface) {}
 
