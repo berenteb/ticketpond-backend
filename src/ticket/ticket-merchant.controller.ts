@@ -10,8 +10,8 @@ import { ExperienceServiceInterface } from '../types/service-interfaces/experien
 import { MerchantServiceInterface } from '../types/service-interfaces/merchant.service.interface';
 import { TicketServiceInterface } from '../types/service-interfaces/ticket.service.interface';
 
-@UseGuards(AuthGuard('jwt'))
 @UseGuards(PermissionGuard(Permissions.MERCHANT))
+@UseGuards(AuthGuard('jwt'))
 @Controller('merchant/ticket')
 export class TicketMerchantController {
   constructor(

@@ -7,9 +7,9 @@ import { MerchantDto, UpdateMerchantDto } from '../types/dtos/merchant.dto';
 import { Permissions } from '../types/jwt.types';
 import { MerchantServiceInterface } from '../types/service-interfaces/merchant.service.interface';
 
-@UseGuards(AuthGuard('jwt'))
 @UseGuards(PermissionGuard(Permissions.MERCHANT))
-@Controller('merchant/me')
+@UseGuards(AuthGuard('jwt'))
+@Controller('merchant-self/me')
 export class MerchantSelfController {
   constructor(private readonly merchantService: MerchantServiceInterface) {}
 

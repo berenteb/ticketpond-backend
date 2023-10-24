@@ -8,8 +8,8 @@ import { Permissions } from '../types/jwt.types';
 import { MerchantServiceInterface } from '../types/service-interfaces/merchant.service.interface';
 import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
 
-@UseGuards(AuthGuard('jwt'))
 @UseGuards(PermissionGuard(Permissions.MERCHANT))
+@UseGuards(AuthGuard('jwt'))
 @Controller('merchant/order')
 export class OrderMerchantController {
   constructor(

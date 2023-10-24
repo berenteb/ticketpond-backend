@@ -6,8 +6,8 @@ import { DeepOrderWithCustomerDto, OrderWithCustomerDto } from '../types/dtos/or
 import { Permissions } from '../types/jwt.types';
 import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
 
-@UseGuards(AuthGuard('jwt'))
 @UseGuards(PermissionGuard(Permissions.ADMIN))
+@UseGuards(AuthGuard('jwt'))
 @Controller('admin/order')
 export class OrderAdminController {
   constructor(private readonly orderService: OrderServiceInterface) {}

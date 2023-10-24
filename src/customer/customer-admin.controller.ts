@@ -6,8 +6,8 @@ import { CreateCustomerDto, CustomerDto, UpdateCustomerDto } from '../types/dtos
 import { Permissions } from '../types/jwt.types';
 import { CustomerServiceInterface } from '../types/service-interfaces/customer.service.interface';
 
-@UseGuards(AuthGuard('jwt'))
 @UseGuards(PermissionGuard(Permissions.ADMIN))
+@UseGuards(AuthGuard('jwt'))
 @Controller('customer')
 export class CustomerAdminController {
   constructor(private readonly customerService: CustomerServiceInterface) {}

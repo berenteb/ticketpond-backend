@@ -7,8 +7,8 @@ import { TicketDto, UpdateTicketDto } from '../types/dtos/ticket.dto';
 import { Permissions } from '../types/jwt.types';
 import { TicketServiceInterface } from '../types/service-interfaces/ticket.service.interface';
 
-@UseGuards(AuthGuard('jwt'))
 @UseGuards(PermissionGuard(Permissions.ADMIN))
+@UseGuards(AuthGuard('jwt'))
 @Controller('admin/ticket')
 export class TicketAdminController {
   constructor(private readonly ticketService: TicketServiceInterface) {}

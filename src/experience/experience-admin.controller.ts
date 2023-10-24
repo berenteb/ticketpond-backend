@@ -8,8 +8,8 @@ import { Permissions } from '../types/jwt.types';
 import { ExperienceServiceInterface } from '../types/service-interfaces/experience.service.interface';
 import { MerchantServiceInterface } from '../types/service-interfaces/merchant.service.interface';
 
-@UseGuards(AuthGuard('jwt'))
 @UseGuards(PermissionGuard(Permissions.ADMIN))
+@UseGuards(AuthGuard('jwt'))
 @Controller('admin/experience')
 export class ExperienceAdminController {
   constructor(
