@@ -1,27 +1,21 @@
-import { Body, Controller, Delete, Get, Param, Patch, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOkResponse } from '@nestjs/swagger';
 import { PermissionGuard } from '../authz/admin.guard';
-import { ReqWithUser } from '../types/common.types';
 import { ExperienceDto, UpdateExperienceDto } from '../types/dtos/experience.dto';
 import { Permissions } from '../types/jwt.types';
 import { ExperienceServiceInterface } from '../types/service-interfaces/experience.service.interface';
-import { MerchantServiceInterface } from '../types/service-interfaces/merchant.service.interface';
 
 @UseGuards(PermissionGuard(Permissions.ADMIN))
 @UseGuards(AuthGuard('jwt'))
 @Controller('admin/experience')
 export class ExperienceAdminController {
-  constructor(
-    private readonly experienceService: ExperienceServiceInterface,
-    private readonly merchantService: MerchantServiceInterface
-  ) {}
+  constructor(private readonly experienceService: ExperienceServiceInterface) {}
 
   @Get()
   @ApiOkResponse({ type: [ExperienceDto] })
-  async getExperiences(@Req() req: ReqWithUser): Promise<ExperienceDto[]> {
-    const merchant = await this.merchantService.getMerchantByUserId(req.user.sub);
-    return this.experienceService.getExperiencesByMerchantId(merchant.id);
+  async getExperiences(): Promise<ExperienceDto[]> {
+    return this.experienceService.getExperiences();
   }
 
   @Get(':id')
