@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiNotFoundResponse, ApiOkResponse } from '@nestjs/swagger';
 import { ReqWithUser } from '../types/common.types';
@@ -19,7 +19,8 @@ export class OrderController {
   @Get(':id')
   @ApiOkResponse({ type: DeepOrderDto })
   @ApiNotFoundResponse()
-  async getOrder(@Param('id') id: string): Promise<DeepOrderDto> {
+  async getOrder(@Param('id') id: string, @Req() req: ReqWithUser): Promise<DeepOrderDto> {
+    if (!(await this.orderService.isOwnProperty(id, req.user.sub))) throw new UnauthorizedException();
     return await this.orderService.getOrderById(id);
   }
 }

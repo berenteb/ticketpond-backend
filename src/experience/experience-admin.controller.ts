@@ -1,12 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOkResponse } from '@nestjs/swagger';
+import { PermissionGuard } from '../authz/admin.guard';
 import { ReqWithUser } from '../types/common.types';
-import { CreateExperienceDto, ExperienceDto, UpdateExperienceDto } from '../types/dtos/experience.dto';
+import { ExperienceDto, UpdateExperienceDto } from '../types/dtos/experience.dto';
+import { Permissions } from '../types/jwt.types';
 import { ExperienceServiceInterface } from '../types/service-interfaces/experience.service.interface';
 import { MerchantServiceInterface } from '../types/service-interfaces/merchant.service.interface';
 
 @UseGuards(AuthGuard('jwt'))
+@UseGuards(PermissionGuard(Permissions.ADMIN))
 @Controller('admin/experience')
 export class ExperienceAdminController {
   constructor(
@@ -25,13 +28,6 @@ export class ExperienceAdminController {
   @ApiOkResponse({ type: ExperienceDto })
   async getExperienceById(@Param('id') id: string): Promise<ExperienceDto> {
     return this.experienceService.getExperienceById(id);
-  }
-
-  @Post()
-  @ApiOkResponse({ type: ExperienceDto })
-  async createExperience(@Body() experience: CreateExperienceDto, @Req() req: ReqWithUser): Promise<ExperienceDto> {
-    const merchant = await this.merchantService.getMerchantByUserId(req.user.sub);
-    return this.experienceService.createExperience(experience, merchant.id);
   }
 
   @Patch(':id')

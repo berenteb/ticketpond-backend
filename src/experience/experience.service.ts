@@ -52,4 +52,9 @@ export class ExperienceService implements ExperienceServiceInterface {
     await this.prismaService.experience.delete({ where: { id } });
     Logger.debug(`Deleted experience with id ${id}`, ExperienceService.name);
   }
+
+  async isOwnProperty(itemId: string, ownerId: string): Promise<boolean> {
+    const experience = await this.prismaService.experience.findUnique({ where: { id: itemId, merchantId: ownerId } });
+    return !!experience;
+  }
 }

@@ -84,4 +84,18 @@ export class OrderService implements OrderServiceInterface {
     Logger.debug(`Found ${orders.length} orders for merchant with id ${merchantId}`, OrderService.name);
     return orders;
   }
+
+  async isOwnProperty(itemId: string, ownerId: string): Promise<boolean> {
+    const order = await this.prisma.order.findFirst({
+      where: { id: itemId, customerId: ownerId },
+    });
+    return !!order;
+  }
+
+  async isConnectedToMerchant(itemId: string, merchantId: string): Promise<boolean> {
+    const order = await this.prisma.order.findFirst({
+      where: { id: itemId, items: { some: { ticket: { experience: { merchantId } } } } },
+    });
+    return !!order;
+  }
 }

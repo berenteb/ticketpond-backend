@@ -4,6 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { MerchantServiceInterface } from '../types/service-interfaces/merchant.service.interface';
 import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
 import { OrderAdminController } from './order-admin.controller';
+import { OrderMerchantController } from './order-merchant.controller';
 import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
 
@@ -13,6 +14,6 @@ import { OrderService } from './order.service';
     { provide: MerchantServiceInterface, useClass: MerchantService },
     PrismaService,
   ],
-  controllers: [OrderController, OrderAdminController],
+  controllers: [OrderController, OrderAdminController, OrderMerchantController],
 })
 export class OrderModule {}

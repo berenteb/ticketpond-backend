@@ -54,4 +54,11 @@ export class TicketService implements TicketServiceInterface {
     Logger.debug(`Found ${tickets.length} tickets for merchant with id ${id}`, TicketService.name);
     return tickets;
   }
+
+  async isOwnProperty(itemId: string, ownerId: string): Promise<boolean> {
+    const ticket = await this.prismaService.ticket.findUnique({
+      where: { id: itemId, experience: { merchantId: ownerId } },
+    });
+    return !!ticket;
+  }
 }

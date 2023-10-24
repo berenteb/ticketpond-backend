@@ -1,30 +1,21 @@
-import { Controller, Delete, Get, Param, Req, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Param, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiNotFoundResponse, ApiOkResponse } from '@nestjs/swagger';
-import { ReqWithUser } from '../types/common.types';
+import { PermissionGuard } from '../authz/admin.guard';
 import { DeepOrderWithCustomerDto, OrderWithCustomerDto } from '../types/dtos/order.dto';
-import { MerchantServiceInterface } from '../types/service-interfaces/merchant.service.interface';
+import { Permissions } from '../types/jwt.types';
 import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
 
 @UseGuards(AuthGuard('jwt'))
+@UseGuards(PermissionGuard(Permissions.ADMIN))
 @Controller('admin/order')
 export class OrderAdminController {
-  constructor(
-    private readonly orderService: OrderServiceInterface,
-    private readonly merchantService: MerchantServiceInterface
-  ) {}
+  constructor(private readonly orderService: OrderServiceInterface) {}
 
   @Get()
   @ApiOkResponse({ type: [OrderWithCustomerDto] })
   async getOrders(): Promise<OrderWithCustomerDto[]> {
     return await this.orderService.getOrders();
-  }
-
-  @Get('me')
-  @ApiOkResponse({ type: [OrderWithCustomerDto] })
-  async getOrdersByMerchant(@Req() req: ReqWithUser): Promise<OrderWithCustomerDto[]> {
-    const merchant = await this.merchantService.getMerchantByUserId(req.user.sub);
-    return await this.orderService.getOrdersForMerchant(merchant.id);
   }
 
   @Get(':id')
