@@ -16,7 +16,6 @@ export class ExperienceService implements ExperienceServiceInterface {
   }
 
   async getExperiencesByMerchantId(id: string): Promise<Experience[]> {
-    console.log(id);
     const experiences = await this.prismaService.experience.findMany({
       where: { merchantId: id },
     });

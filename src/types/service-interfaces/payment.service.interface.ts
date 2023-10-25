@@ -1,7 +1,7 @@
 import { OrderDto } from '../dtos/order.dto';
+import { PaymentDto } from '../dtos/payment.dto';
 
 export abstract class PaymentServiceInterface {
-  abstract payForOrder(order: OrderDto): Promise<void>;
-  abstract paymentSucceed(): Promise<void>;
-  abstract paymentFail(): Promise<void>;
+  abstract createIntent(order: OrderDto): Promise<PaymentDto>;
+  abstract handleWebhook(req: Request, body: any): Promise<void>;
 }

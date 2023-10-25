@@ -1,4 +1,5 @@
 import { CartDto } from '../dtos/cart.dto';
+import { OrderDto } from '../dtos/order.dto';
 
 export abstract class CartServiceInterface {
   abstract getCartById(id: string): Promise<CartDto>;
@@ -16,5 +17,5 @@ export abstract class CartServiceInterface {
   abstract deleteCart(cartId: string): Promise<void>;
 
   abstract deleteCartForCustomer(customerId: string): Promise<void>;
-  abstract checkout(cartId: string): Promise<string>;
+  abstract checkout(cartId: string): Promise<OrderDto>;
 }

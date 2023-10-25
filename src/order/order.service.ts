@@ -1,4 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { OrderStatus, PaymentStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CartDto } from '../types/dtos/cart.dto';
 import { DeepOrderDto, DeepOrderWithCustomerDto, OrderDto, OrderWithCustomerDto } from '../types/dtos/order.dto';
@@ -46,10 +47,13 @@ export class OrderService implements OrderServiceInterface {
 
   async createOrder(cart: CartDto): Promise<DeepOrderDto> {
     const { customerId, items } = cart;
+    const sum = items.reduce((acc, item) => acc + item.ticket.price, 0);
+    const defaultStatus = sum === 0 ? { orderStatus: OrderStatus.PAID, paymentStatus: PaymentStatus.SUCCESS } : {};
     const created = await this.prisma.order.create({
       data: {
         customerId,
         serialNumber: generateDateBasedSerialNumber(),
+        ...defaultStatus,
         items: {
           create: items.map((item) => ({
             ticketId: item.ticket.id,

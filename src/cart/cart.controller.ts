@@ -23,8 +23,15 @@ export class CartController {
     if (cart.items.length === 0) {
       throw new BadRequestException('Cart is empty');
     }
-    const orderId = await this.cartService.checkout(cart.id);
-    return '/profile/orders/' + orderId;
+    const order = await this.cartService.checkout(cart.id);
+    if (!order) {
+      throw new BadRequestException('Could not checkout');
+    }
+    const sum = order.items.reduce((acc, item) => acc + item.price, 0);
+    if (sum === 0) {
+      return '/profile/order/' + order.id;
+    }
+    return '/payment/' + order.id;
   }
 
   @Post('add')
