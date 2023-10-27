@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiNotFoundResponse, ApiOkResponse } from '@nestjs/swagger';
 import { PermissionGuard } from '../authz/admin.guard';
@@ -29,5 +29,17 @@ export class OrderAdminController {
   @ApiOkResponse()
   async deleteOrder(@Param('id') id: string): Promise<void> {
     return await this.orderService.deleteOrder(id);
+  }
+
+  @Post('fulfill/:id')
+  @ApiOkResponse()
+  async fulfillOrder(@Param('id') id: string): Promise<void> {
+    return await this.orderService.fulfillOrder(id);
+  }
+
+  @Post('cancel/:id')
+  @ApiOkResponse()
+  async cancelOrder(@Param('id') id: string): Promise<void> {
+    return await this.orderService.cancelOrder(id);
   }
 }

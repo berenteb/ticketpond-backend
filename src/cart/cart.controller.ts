@@ -4,11 +4,15 @@ import { ApiOkResponse } from '@nestjs/swagger';
 import { ReqWithUser } from '../types/common.types';
 import { AddToCartDto, CartDto, RemoveFromCartDto } from '../types/dtos/cart.dto';
 import { CartServiceInterface } from '../types/service-interfaces/cart.service.interface';
+import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('cart')
 export class CartController {
-  constructor(private readonly cartService: CartServiceInterface) {}
+  constructor(
+    private readonly cartService: CartServiceInterface,
+    private readonly orderService: OrderServiceInterface
+  ) {}
 
   @Get('me')
   @ApiOkResponse({ type: CartDto })
@@ -29,7 +33,8 @@ export class CartController {
     }
     const sum = order.items.reduce((acc, item) => acc + item.price, 0);
     if (sum === 0) {
-      return '/profile/order/' + order.id;
+      await this.orderService.fulfillOrder(order.id);
+      return '/profile/orders/' + order.id;
     }
     return '/payment/' + order.id;
   }

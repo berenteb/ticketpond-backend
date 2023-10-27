@@ -4,11 +4,12 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CartDto } from '../types/dtos/cart.dto';
 import { DeepOrderDto, DeepOrderWithCustomerDto, OrderDto, OrderWithCustomerDto } from '../types/dtos/order.dto';
 import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
+import { PassServiceInterface } from '../types/service-interfaces/pass.service.interface';
 import { generateDateBasedSerialNumber, generateSerialNumber } from '../util/serialNumber.util';
 
 @Injectable()
 export class OrderService implements OrderServiceInterface {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly passService: PassServiceInterface) {}
 
   async getOrderById(id: string): Promise<DeepOrderDto> {
     const order = await this.prisma.order.findUnique({
@@ -101,5 +102,28 @@ export class OrderService implements OrderServiceInterface {
       where: { id: itemId, items: { some: { ticket: { experience: { merchantId } } } } },
     });
     return !!order;
+  }
+
+  async fulfillOrder(id: string): Promise<void> {
+    const order = await this.prisma.order.update({
+      where: { id },
+      data: { orderStatus: OrderStatus.PAID, paymentStatus: PaymentStatus.SUCCESS },
+      include: { items: { include: { ticket: { include: { experience: true } } } } },
+    });
+    await this.passService.generatePasses(order);
+  }
+
+  async failOrder(id: string): Promise<void> {
+    await this.prisma.order.update({
+      where: { id },
+      data: { paymentStatus: PaymentStatus.FAIL },
+    });
+  }
+
+  async cancelOrder(id: string): Promise<void> {
+    await this.prisma.order.update({
+      where: { id },
+      data: { orderStatus: OrderStatus.CANCELLED },
+    });
   }
 }
