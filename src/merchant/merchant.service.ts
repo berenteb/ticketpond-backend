@@ -44,14 +44,15 @@ export class MerchantService implements MerchantServiceInterface {
     Logger.debug(`Deleted merchant with id ${id}`, MerchantService.name);
   }
 
-  async getMerchantByUserId(id: string): Promise<MerchantDto> {
+  async getMerchantByUserId(id: string): Promise<MerchantDto | undefined> {
     const merchant = await this.prisma.merchant.findFirst({
       where: { MerchantOnCustomer: { some: { customerId: id } } },
     });
     if (!merchant) {
-      throw new NotFoundException(`Merchant with userId ${id} not found`);
+      Logger.debug(`No merchant found for user ${id}`, MerchantService.name);
+    } else {
+      Logger.debug(`Found merchant for user ${id}`, MerchantService.name);
     }
-    Logger.debug(`Found merchant with userId ${id}`, MerchantService.name);
     return merchant;
   }
 }

@@ -12,7 +12,7 @@ export class CustomerController {
 
   @Get('me')
   @ApiOkResponse({ type: CustomerDto })
-  async getMe(@Req() req: any): Promise<CustomerDto> {
+  async getMe(@Req() req: ReqWithUser): Promise<CustomerDto> {
     return await this.customerService.getCustomerById(req.user.sub);
   }
 

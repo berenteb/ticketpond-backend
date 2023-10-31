@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import * as dotenv from 'dotenv';
 import { passportJwtSecret } from 'jwks-rsa';
@@ -30,6 +30,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: JwtUser): Promise<JwtUser> {
     const merchantForUser = await this.merhcantService.getMerchantByUserId(payload.sub);
     if (merchantForUser) {
+      Logger.debug('User is a merchant', JwtStrategy.name);
       payload.permissions.push(Permissions.MERCHANT);
     }
     return payload;

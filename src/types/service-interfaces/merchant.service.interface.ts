@@ -4,7 +4,7 @@ export abstract class MerchantServiceInterface {
   abstract getMerchants(): Promise<MerchantDto[]>;
 
   abstract getMerchantById(id: string): Promise<MerchantDto>;
-  abstract getMerchantByUserId(id: string): Promise<MerchantDto>;
+  abstract getMerchantByUserId(id: string): Promise<MerchantDto | undefined>;
 
   abstract createMerchant(merchant: CreateMerchantDto): Promise<MerchantDto>;
   abstract assignCustomerToMerchant(merchantId: string, customerId: string): Promise<void>;
