@@ -27,8 +27,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  validate(payload: JwtUser): JwtUser {
-    const merchantForUser = this.merhcantService.getMerchantByUserId(payload.sub);
+  async validate(payload: JwtUser): Promise<JwtUser> {
+    const merchantForUser = await this.merhcantService.getMerchantByUserId(payload.sub);
     if (merchantForUser) {
       payload.permissions.push(Permissions.MERCHANT);
     }
