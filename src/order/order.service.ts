@@ -5,7 +5,7 @@ import { CartDto } from '../types/dtos/cart.dto';
 import { DeepOrderDto, DeepOrderWithCustomerDto, OrderDto, OrderWithCustomerDto } from '../types/dtos/order.dto';
 import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
 import { PassServiceInterface } from '../types/service-interfaces/pass.service.interface';
-import { generateDateBasedSerialNumber, generateSerialNumber } from '../util/serialNumber.util';
+import { generateDateBasedSerialNumber, generateSerialNumber } from '../util/generators.util';
 
 @Injectable()
 export class OrderService implements OrderServiceInterface {

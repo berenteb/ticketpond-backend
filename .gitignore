@@ -8,5 +8,7 @@ yarn-error.log*
 .env
 static/passes/apple/*
 !static/passes/apple/.gitkeep
+static/uploads/*
+!static/uploads/.gitkeep
 creds/*
 !creds/.gitkeep
