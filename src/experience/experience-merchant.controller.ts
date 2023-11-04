@@ -15,6 +15,7 @@ import { ApiOkResponse } from '@nestjs/swagger';
 import { PermissionGuard } from '../authz/admin.guard';
 import { ReqWithUser } from '../types/common.types';
 import { CreateExperienceDto, ExperienceDto, UpdateExperienceDto } from '../types/dtos/experience.dto';
+import { ValidationRequestDto, ValidationResponseDto } from '../types/dtos/validate.dto';
 import { Permissions } from '../types/jwt.types';
 import { ExperienceServiceInterface } from '../types/service-interfaces/experience.service.interface';
 import { MerchantServiceInterface } from '../types/service-interfaces/merchant.service.interface';
@@ -60,6 +61,18 @@ export class ExperienceMerchantController {
     const merchant = await this.merchantService.getMerchantByUserId(req.user.sub);
     if (!(await this.experienceService.isOwnProperty(id, merchant.id))) throw new UnauthorizedException();
     return this.experienceService.updateExperience(id, experience);
+  }
+
+  @Post(':id/validate')
+  @ApiOkResponse({ type: ValidationResponseDto })
+  async validateExperiencePass(
+    @Param('id') experienceId: string,
+    @Body() validationRequest: ValidationRequestDto,
+    @Req() req: ReqWithUser
+  ): Promise<ValidationResponseDto> {
+    const merchant = await this.merchantService.getMerchantByUserId(req.user.sub);
+    if (!(await this.experienceService.isOwnProperty(experienceId, merchant.id))) throw new UnauthorizedException();
+    return this.experienceService.validateExperiencePass(validationRequest.ticketSerialNumber, experienceId);
   }
 
   @Delete(':id')

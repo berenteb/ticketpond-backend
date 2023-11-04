@@ -1,8 +1,9 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Experience } from '@prisma/client';
+import { Experience, OrderStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { DeepExperienceDto } from '../types/dtos/deep-experience.dto';
 import { CreateExperienceDto, UpdateExperienceDto } from '../types/dtos/experience.dto';
+import { ValidationResponseDto, ValidationResponseMessage } from '../types/dtos/validate.dto';
 import { ExperienceServiceInterface } from '../types/service-interfaces/experience.service.interface';
 
 @Injectable()
@@ -55,5 +56,42 @@ export class ExperienceService implements ExperienceServiceInterface {
   async isOwnProperty(itemId: string, ownerId: string): Promise<boolean> {
     const experience = await this.prismaService.experience.findUnique({ where: { id: itemId, merchantId: ownerId } });
     return !!experience;
+  }
+
+  async validateExperiencePass(ticketSerialNumber: string, experienceId: string): Promise<ValidationResponseDto> {
+    const orderItem = await this.prismaService.orderItem.findUnique({
+      where: { serialNumber: ticketSerialNumber },
+      include: { ticket: { include: { experience: true } }, order: { include: { customer: true } } },
+    });
+    if (!orderItem) {
+      return { isValid: false, message: ValidationResponseMessage.NOT_FOUND };
+    }
+    if (orderItem.ticket.experience.id !== experienceId) {
+      return { isValid: false, message: ValidationResponseMessage.INVALID };
+    }
+    if (orderItem.order.orderStatus !== OrderStatus.PAID) {
+      return {
+        isValid: false,
+        message: ValidationResponseMessage.UNPAID,
+        orderItem,
+        customer: orderItem.order.customer,
+      };
+    }
+
+    const customer = orderItem.order.customer;
+
+    delete orderItem.order;
+
+    const now = new Date();
+    const start = new Date(orderItem.ticket.validFrom);
+    const end = new Date(orderItem.ticket.validTo);
+
+    if (now < start) {
+      return { isValid: false, message: ValidationResponseMessage.TOO_EARLY, orderItem, customer };
+    }
+    if (now > end) {
+      return { isValid: false, message: ValidationResponseMessage.TOO_LATE, orderItem, customer };
+    }
+    return { isValid: true, message: ValidationResponseMessage.VALID, orderItem, customer };
   }
 }
