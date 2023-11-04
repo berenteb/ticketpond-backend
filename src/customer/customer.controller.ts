@@ -16,6 +16,12 @@ export class CustomerController {
     return await this.customerService.getCustomerById(req.user.sub);
   }
 
+  @Get('permissions')
+  @ApiOkResponse({ type: [String] })
+  async getPermissions(@Req() req: ReqWithUser): Promise<string[]> {
+    return req.user.permissions;
+  }
+
   @Post('register')
   @ApiOkResponse({ type: CustomerDto })
   async registerCustomer(@Body() customer: CreateCustomerDto, @Req() req: ReqWithUser): Promise<CustomerDto> {
