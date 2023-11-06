@@ -19,11 +19,11 @@ export class CustomerAdminController {
   }
 
   @UseGuards(PermissionGuard(Permissions.ADMIN))
-  @Get(':id')
+  @Get(':internalId')
   @ApiOkResponse({ type: CustomerDto })
   @ApiNotFoundResponse()
-  async getCustomer(@Param('id') id: string): Promise<CustomerDto> {
-    return this.customerService.getCustomerById(id);
+  async getCustomerByInternalId(@Param('internalId') internalId: string): Promise<CustomerDto> {
+    return this.customerService.getCustomerByInternalId(internalId);
   }
 
   @Post()
@@ -32,15 +32,18 @@ export class CustomerAdminController {
     return this.customerService.createCustomer(customer);
   }
 
-  @Patch(':id')
+  @Patch(':internalId')
   @ApiOkResponse({ type: CustomerDto })
-  async updateCustomer(@Param('id') id: string, @Body() customer: UpdateCustomerDto): Promise<CustomerDto> {
-    return this.customerService.updateCustomer(id, customer);
+  async updateCustomerByInternalId(
+    @Param('internalId') internalId: string,
+    @Body() customer: UpdateCustomerDto
+  ): Promise<CustomerDto> {
+    return this.customerService.updateCustomerByInternalId(internalId, customer);
   }
 
-  @Delete(':id')
+  @Delete(':internalId')
   @ApiOkResponse()
-  async deleteCustomer(@Param('id') id: string): Promise<void> {
-    return this.customerService.deleteCustomer(id);
+  async deleteCustomerByInternalId(@Param('internalId') internalId: string): Promise<void> {
+    return this.customerService.deleteCustomer(internalId);
   }
 }

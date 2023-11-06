@@ -2,9 +2,10 @@ import { JwtUser } from './jwt.types';
 
 export type Identifiable = {
   id: string;
+  internalId?: string;
 };
 
-export type WithoutId<T extends Identifiable> = Omit<T, 'id'>;
+export type WithoutId<T extends Identifiable> = Omit<T, 'id' | 'internalId'>;
 
 export const PhoneRegex = /^\+?\d{10,11}$/;
 

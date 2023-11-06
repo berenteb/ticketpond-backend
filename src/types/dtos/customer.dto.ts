@@ -70,6 +70,9 @@ export class CustomerDto implements Customer {
   @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   id: string;
 
+  @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
+  internalId: string;
+
   @ApiProperty({ example: 'John' })
   firstName: string;
 

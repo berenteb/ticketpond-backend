@@ -1,7 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Customer } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateCustomerDto, UpdateCustomerDto } from '../types/dtos/customer.dto';
+import { CreateCustomerDto, CustomerDto, UpdateCustomerDto } from '../types/dtos/customer.dto';
 import { CustomerServiceInterface } from '../types/service-interfaces/customer.service.interface';
 import { NotificationServiceInterface } from '../types/service-interfaces/notification.service.interface';
 
@@ -35,6 +35,15 @@ export class CustomerService extends CustomerServiceInterface {
     return customer;
   }
 
+  async getCustomerByInternalId(internalId: string): Promise<CustomerDto> {
+    const customer = await this.prismaService.customer.findUnique({ where: { internalId } });
+    if (!customer) {
+      throw new NotFoundException(`Customer with internalId ${internalId} not found`);
+    }
+    Logger.debug(`Found customer with internalId ${internalId}`, CustomerService.name);
+    return customer;
+  }
+
   async getCustomers(): Promise<Customer[]> {
     const customers = await this.prismaService.customer.findMany();
     Logger.debug(`Found ${customers.length} customers`, CustomerService.name);
@@ -44,6 +53,12 @@ export class CustomerService extends CustomerServiceInterface {
   async updateCustomer(id: string, customer: UpdateCustomerDto): Promise<Customer> {
     const updatedCustomer = await this.prismaService.customer.update({ where: { id }, data: customer });
     Logger.debug(`Updated customer with id ${id}`, CustomerService.name);
+    return updatedCustomer;
+  }
+
+  async updateCustomerByInternalId(internalId: string, customer: UpdateCustomerDto): Promise<CustomerDto> {
+    const updatedCustomer = await this.prismaService.customer.update({ where: { internalId }, data: customer });
+    Logger.debug(`Updated customer with internalId ${internalId}`, CustomerService.name);
     return updatedCustomer;
   }
 }
