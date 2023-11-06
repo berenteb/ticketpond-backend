@@ -13,6 +13,7 @@ import { OrderModule } from './order/order.module';
 import { PassModule } from './pass/pass.module';
 import { PaymentModule } from './payment/payment.module';
 import { TicketModule } from './ticket/ticket.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { TicketModule } from './ticket/ticket.module';
       },
     }),
     AssetModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

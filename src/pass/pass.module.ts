@@ -7,5 +7,6 @@ import { PassController } from './pass.controller';
 @Module({
   providers: [{ provide: PassServiceInterface, useClass: PassService }, AppleService],
   controllers: [PassController],
+  exports: [{ provide: PassServiceInterface, useClass: PassService }],
 })
 export class PassModule {}

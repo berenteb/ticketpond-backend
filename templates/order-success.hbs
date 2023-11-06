@@ -1,0 +1,49 @@
+<html xmlns='http://www.w3.org/1999/xhtml' lang='hu'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta content='width=device-width, initial-scale=1' name='viewport' />
+    <meta name='x-apple-disable-message-reformatting' />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+    <meta content='telephone=no' name='format-detection' />
+    <title>Sikeres jegyvásárlás!</title>
+    <style>
+      body{ font-family: Arial, sans-serif; } a {color: #6153cc;} div.footer{ margin-top: 50px; } p{ margin: 20px 0; }
+      table{ border-spacing: 20px; }
+    </style>
+  </head>
+  <body>
+    <div>
+      <p>Szia, {{firstName}} 👋</p>
+      <p>Köszönjük szépen rendelésed!</p>
+      <table>
+        {{#each items}}
+          {{#with this}}
+            <tr>
+              <td>
+                <p>{{name}}</p>
+              </td>
+              <td>
+                <a href='{{walletUrl}}'>Apple Tárca</a>
+                <a href='{{qrCodeUrl}}'>QR kód</a>
+              </td>
+              <td>
+                <p>{{price}} Ft</p>
+              </td>
+            </tr>
+          {{/with}}
+        {{/each}}
+      </table>
+      <p>
+        Kérjük, hogy gyorsabb és kényelmesebb érvényesítés érdekében add hozzá a jegyedet a kedvenc digitális tárcádhoz,
+        vagy mentsd le a QR-kód(ot).
+      </p>
+      <p>A jegyeidet ezen kívül a profil menüpont alatt, a
+        <a href='http://localhost:3000/profile/orders'>Rendeléseim</a>
+        oldalon érheted el.</p>
+      <div class='footer'>
+        <p>Üdvözlettel,</p>
+        <p>A Ticketpond csapata</p>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
-import { MerchantService } from '../merchant/merchant.service';
+import { MerchantModule } from '../merchant/merchant.module';
 import { PrismaService } from '../prisma/prisma.service';
-import { MerchantServiceInterface } from '../types/service-interfaces/merchant.service.interface';
 import { JwtStrategy } from './jwt.strategy';
 
 @Module({
-  imports: [PassportModule.register({ defaultStrategy: 'jwt' })],
-  providers: [JwtStrategy, { provide: MerchantServiceInterface, useClass: MerchantService }, PrismaService],
+  imports: [PassportModule.register({ defaultStrategy: 'jwt' }), MerchantModule],
+  providers: [JwtStrategy, PrismaService],
   exports: [PassportModule],
 })
 export class AuthzModule {}

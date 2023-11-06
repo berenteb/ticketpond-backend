@@ -3,16 +3,21 @@ import { Customer } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCustomerDto, UpdateCustomerDto } from '../types/dtos/customer.dto';
 import { CustomerServiceInterface } from '../types/service-interfaces/customer.service.interface';
+import { NotificationServiceInterface } from '../types/service-interfaces/notification.service.interface';
 
 @Injectable()
 export class CustomerService extends CustomerServiceInterface {
-  constructor(private readonly prismaService: PrismaService) {
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly notificationService: NotificationServiceInterface
+  ) {
     super();
   }
 
   async createCustomer(customer: CreateCustomerDto, id?: string): Promise<Customer> {
     const created = await this.prismaService.customer.create({ data: { ...customer, id } });
     Logger.debug(`Created customer with id ${created.id}`, CustomerService.name);
+    this.notificationService.sendWelcome(created);
     return created;
   }
 

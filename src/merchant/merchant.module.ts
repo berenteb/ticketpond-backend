@@ -9,5 +9,6 @@ import { MerchantService } from './merchant.service';
 @Module({
   providers: [{ provide: MerchantServiceInterface, useClass: MerchantService }, PrismaService],
   controllers: [MerchantController, MerchantAdminController, MerchantSelfController],
+  exports: [{ provide: MerchantServiceInterface, useClass: MerchantService }],
 })
 export class MerchantModule {}

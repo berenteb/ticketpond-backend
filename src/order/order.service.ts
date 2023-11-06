@@ -3,13 +3,18 @@ import { OrderStatus, PaymentStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CartDto } from '../types/dtos/cart.dto';
 import { DeepOrderDto, DeepOrderWithCustomerDto, OrderDto, OrderWithCustomerDto } from '../types/dtos/order.dto';
+import { NotificationServiceInterface } from '../types/service-interfaces/notification.service.interface';
 import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
 import { PassServiceInterface } from '../types/service-interfaces/pass.service.interface';
 import { generateDateBasedSerialNumber, generateSerialNumber } from '../util/generators.util';
 
 @Injectable()
 export class OrderService implements OrderServiceInterface {
-  constructor(private readonly prisma: PrismaService, private readonly passService: PassServiceInterface) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly passService: PassServiceInterface,
+    private readonly notificationService: NotificationServiceInterface
+  ) {}
 
   async getOrderById(id: string): Promise<DeepOrderDto> {
     const order = await this.prisma.order.findUnique({
@@ -108,9 +113,11 @@ export class OrderService implements OrderServiceInterface {
     const order = await this.prisma.order.update({
       where: { id },
       data: { orderStatus: OrderStatus.PAID, paymentStatus: PaymentStatus.SUCCESS },
-      include: { items: { include: { ticket: { include: { experience: true } } } } },
+      include: { items: { include: { ticket: { include: { experience: true } } } }, customer: true },
     });
     await this.passService.generatePasses(order);
+    this.notificationService.sendOrderSuccess(order);
+    Logger.debug(`Fulfilled order with id ${id}`, OrderService.name);
   }
 
   async failOrder(id: string): Promise<void> {
@@ -118,6 +125,7 @@ export class OrderService implements OrderServiceInterface {
       where: { id },
       data: { paymentStatus: PaymentStatus.FAIL },
     });
+    Logger.debug(`Failed order with id ${id}`, OrderService.name);
   }
 
   async cancelOrder(id: string): Promise<void> {
@@ -125,5 +133,6 @@ export class OrderService implements OrderServiceInterface {
       where: { id },
       data: { orderStatus: OrderStatus.CANCELLED },
     });
+    Logger.debug(`Cancelled order with id ${id}`, OrderService.name);
   }
 }
