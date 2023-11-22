@@ -1,18 +1,42 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { MemoryStoredFile, NestjsFormDataModule } from 'nestjs-form-data';
+import { AssetServiceInterface } from '../types/service-interfaces/asset.service.interface';
 import { AssetController } from './asset.controller';
 
-describe('AssetController', () => {
-  let controller: AssetController;
+const mockUploadFile = jest.fn();
+const mockDeleteFile = jest.fn();
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [AssetController],
-    }).compile();
+class MockAssetService implements AssetServiceInterface {
+  deleteFile(fileName: string): Promise<void> {
+    mockDeleteFile(fileName);
+    return Promise.resolve(undefined);
+  }
 
-    controller = module.get<AssetController>(AssetController);
-  });
+  uploadFile(file: any): Promise<string> {
+    mockUploadFile(file);
+    return Promise.resolve('');
+  }
+}
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+let controller: AssetController;
+
+beforeEach(async () => {
+  const module: TestingModule = await Test.createTestingModule({
+    imports: [NestjsFormDataModule],
+    providers: [
+      {
+        provide: AssetServiceInterface,
+        useClass: MockAssetService,
+      },
+    ],
+    controllers: [AssetController],
+  }).compile();
+
+  controller = module.get<AssetController>(AssetController);
+});
+
+it('should call uploadFile on service', async () => {
+  const file = {} as MemoryStoredFile;
+  await controller.uploadFile({ file });
+  expect(mockUploadFile).toHaveBeenCalledWith(file);
 });
