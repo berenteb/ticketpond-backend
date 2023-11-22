@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CartMock } from '../__mocks__/cart.mock';
 import { OrderMock } from '../__mocks__/order.mock';
+import { OrderServiceMock } from '../__mocks__/orderService.mock';
 import { PrismaMock } from '../__mocks__/prisma.mock';
 import { PrismaService } from '../prisma/prisma.service';
 import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
@@ -8,16 +9,12 @@ import { CartService } from './cart.service';
 
 let service: CartService;
 
-const mockOrderService = {
-  createOrder: jest.fn(),
-};
-
 beforeEach(async () => {
   const module: TestingModule = await Test.createTestingModule({
     providers: [
       CartService,
       { provide: PrismaService, useValue: PrismaMock },
-      { provide: OrderServiceInterface, useValue: mockOrderService },
+      { provide: OrderServiceInterface, useValue: OrderServiceMock },
     ],
   }).compile();
 
@@ -182,14 +179,14 @@ it('should remove three items from cart for customer if at least three exist', a
 
 it('should get cart, create order and delete cart, then return order', async () => {
   PrismaMock.cart.findUnique.mockResolvedValue(CartMock);
-  mockOrderService.createOrder.mockResolvedValue(OrderMock);
+  OrderServiceMock.createOrder.mockResolvedValue(OrderMock);
 
   const order = await service.checkout('test-cart-id');
   expect(PrismaMock.cart.findUnique).toBeCalledWith({
     where: { id: 'test-cart-id' },
     include: { items: { include: { ticket: { include: { experience: true } } } } },
   });
-  expect(mockOrderService.createOrder).toBeCalledWith(CartMock);
+  expect(OrderServiceMock.createOrder).toBeCalledWith(CartMock);
   expect(PrismaMock.cart.delete).toBeCalledWith({ where: { id: 'test-cart-id' } });
   expect(order).toEqual(OrderMock);
 });
