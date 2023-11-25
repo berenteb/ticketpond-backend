@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CartMock } from '../__mocks__/cart.mock';
-import { CartServiceMock } from '../__mocks__/cartService.mock';
-import { OrderMock } from '../__mocks__/order.mock';
-import { OrderServiceMock } from '../__mocks__/orderService.mock';
-import { PrismaMock } from '../__mocks__/prisma.mock';
+import { CartMock } from '../__mocks__/entities/cart.mock';
+import { CartServiceMock } from '../__mocks__/services/cartService.mock';
+import { OrderMock } from '../__mocks__/entities/order.mock';
+import { OrderServiceMock } from '../__mocks__/services/orderService.mock';
+import { PrismaMock } from '../__mocks__/services/prisma.mock';
 import { PrismaService } from '../prisma/prisma.service';
 import { ReqWithUser } from '../types/common.types';
 import { CartServiceInterface } from '../types/service-interfaces/cart.service.interface';

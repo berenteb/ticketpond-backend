@@ -1,5 +1,5 @@
 import { Ticket } from '@prisma/client';
-import { DeepTicketDto } from '../types/dtos/deep-ticket.dto';
+import { DeepTicketDto } from '../../types/dtos/deep-ticket.dto';
 import { ExperienceMock } from './experience.mock';
 
 export const TicketMock: Ticket = {

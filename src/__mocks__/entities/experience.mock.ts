@@ -1,5 +1,5 @@
 import { Experience } from '@prisma/client';
-import { DeepExperienceDto } from '../types/dtos/deep-experience.dto';
+import { DeepExperienceDto } from '../../types/dtos/deep-experience.dto';
 import { MerchantMock } from './merchant.mock';
 import { TicketMock } from './ticket.mock';
 

@@ -4,6 +4,7 @@ const createDelegateMock = () => {
     findUnique: jest.fn(),
     findMany: jest.fn(),
     findFirst: jest.fn(),
+    update: jest.fn(),
     delete: jest.fn(),
   };
 };

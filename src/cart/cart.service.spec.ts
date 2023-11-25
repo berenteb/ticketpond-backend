@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CartMock } from '../__mocks__/cart.mock';
-import { OrderMock } from '../__mocks__/order.mock';
-import { OrderServiceMock } from '../__mocks__/orderService.mock';
-import { PrismaMock } from '../__mocks__/prisma.mock';
+import { CartMock } from '../__mocks__/entities/cart.mock';
+import { OrderMock } from '../__mocks__/entities/order.mock';
+import { OrderServiceMock } from '../__mocks__/services/orderService.mock';
+import { PrismaMock } from '../__mocks__/services/prisma.mock';
 import { PrismaService } from '../prisma/prisma.service';
 import { OrderServiceInterface } from '../types/service-interfaces/order.service.interface';
 import { CartService } from './cart.service';

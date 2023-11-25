@@ -1,4 +1,4 @@
-import { DeepOrderDto } from '../types/dtos/order.dto';
+import { DeepOrderDto } from '../../types/dtos/order.dto';
 import { DeepTicketMock } from './ticket.mock';
 
 export const OrderMock: DeepOrderDto = {
