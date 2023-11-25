@@ -86,10 +86,10 @@ export class ExperienceService implements ExperienceServiceInterface {
     const start = new Date(orderItem.ticket.validFrom);
     const end = new Date(orderItem.ticket.validTo);
 
-    if (now < start) {
+    if (now.getTime() < start.getTime()) {
       return { isValid: false, message: ValidationResponseMessage.TOO_EARLY, orderItem, customer };
     }
-    if (now > end) {
+    if (now.getTime() > end.getTime()) {
       return { isValid: false, message: ValidationResponseMessage.TOO_LATE, orderItem, customer };
     }
     return { isValid: true, message: ValidationResponseMessage.VALID, orderItem, customer };
