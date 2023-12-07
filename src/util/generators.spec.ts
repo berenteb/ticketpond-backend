@@ -22,7 +22,6 @@ describe('generateRandomString', () => {
 describe('generateDateBasedSerialNumber', () => {
   it('should generate a date based serial number', () => {
     const dateBasedSerialNumber = generateDateBasedSerialNumber();
-    console.log(dateBasedSerialNumber);
     expect(dateBasedSerialNumber).toMatch(/\d{4}\.\d{1,2}\.\d{1,2}\.\d{6}/);
   });
 
