@@ -23,6 +23,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "seed": "ts-node ./prisma/seed.ts",
+    "start:migrate:prod": "prisma migrate deploy && yarn start:prod",
     "stripe-webhook": "stripe listen --forward-to localhost:3001/payment/webhook",
     "stripe-login": "stripe login"
   },
