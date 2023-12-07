@@ -5,3 +5,10 @@ yarn-error.log*
 .DS_Store
 /coverage
 /.idea
+.env
+static/passes/apple/*
+!static/passes/apple/.gitkeep
+static/uploads/*
+!static/uploads/.gitkeep
+creds/*
+!creds/.gitkeep

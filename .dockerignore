@@ -1,0 +1,10 @@
+*
+!src
+!prisma/schema.prisma
+!prisma/migrations
+!tsconfig.json
+!package.json
+!yarn.lock
+!nest-cli.json
+!creds
+!assets
